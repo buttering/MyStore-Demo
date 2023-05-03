@@ -1,13 +1,28 @@
 package com.csu.mypetstore.api;
 
+import com.csu.mypetstore.api.dao.User;
+import com.csu.mypetstore.api.mapper.UserMapper;
+import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
 
 @SpringBootTest
 class MyPetstoreApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Resource
+    private UserMapper userMapper;
+
+    @Test
+    void contextLoads() {
+        System.out.println("context load");
+    }
+
+    @Test
+    void myBatis(){
+        List<User> userList = userMapper.selectList(null);
+        userList.forEach(System.out::println);
+    }
 
 }

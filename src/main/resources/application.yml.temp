@@ -1,0 +1,9 @@
+server:
+  port: 8090
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://123.207.30.19:3306/mypetstore?serverTimezone=UTC&?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username:
+    password:
