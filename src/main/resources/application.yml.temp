@@ -7,3 +7,8 @@ spring:
     url: jdbc:mysql://123.207.30.19:3306/mypetstore?serverTimezone=UTC&?useUnicode=true&characterEncoding=utf8&useSSL=false
     username:
     password:
+
+mybatis-plus:
+  global-config:
+    db-config:
+      table-underline: false
