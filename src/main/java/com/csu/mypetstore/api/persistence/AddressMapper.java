@@ -1,7 +1,7 @@
-package com.csu.mypetstore.api.mapper;
+package com.csu.mypetstore.api.persistence;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.csu.mypetstore.api.dao.Address;
+import com.csu.mypetstore.api.domain.Address;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

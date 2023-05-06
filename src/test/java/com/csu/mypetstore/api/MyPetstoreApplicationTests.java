@@ -1,7 +1,7 @@
 package com.csu.mypetstore.api;
 
-import com.csu.mypetstore.api.dao.User;
-import com.csu.mypetstore.api.mapper.UserMapper;
+import com.csu.mypetstore.api.domain.User;
+import com.csu.mypetstore.api.persistence.UserMapper;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

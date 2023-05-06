@@ -1,7 +1,7 @@
 package com.csu.mypetstore.api.controller;
 
-import com.csu.mypetstore.api.dao.Address;
-import com.csu.mypetstore.api.mapper.AddressMapper;
+import com.csu.mypetstore.api.domain.Address;
+import com.csu.mypetstore.api.persistence.AddressMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

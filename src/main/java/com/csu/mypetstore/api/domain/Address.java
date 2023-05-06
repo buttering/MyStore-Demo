@@ -1,4 +1,4 @@
-package com.csu.mypetstore.api.dao;
+package com.csu.mypetstore.api.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
