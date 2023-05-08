@@ -8,8 +8,8 @@ import lombok.Getter;
 @JsonInclude(JsonInclude.Include.NON_NULL)  // 控制序列化,如果加该注解的字段为null,那么就不序列化这个字段。
 public class CommonResponse <T> {
     private final int code;
-    private T data;
-    private String message;
+    private final T data;
+    private final String message;
 
     private CommonResponse(int status, String message, T data){
         this.code = status;

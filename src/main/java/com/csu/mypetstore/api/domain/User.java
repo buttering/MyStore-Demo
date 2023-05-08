@@ -8,13 +8,13 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @TableName(value = "user")
 public class User {
     @TableId(value = "uid", type = IdType.AUTO)  // auto:自增
     private Integer id;
+
     @NotBlank(message = "用户名不能为空")
     private String username;
     @NotBlank(message = "密码不能为空")
@@ -25,6 +25,7 @@ public class User {
     private String answer;
     @NotBlank(message = "角色不能为空")
     private Integer role;
+
     @TableField(value = "create_time")
     @NotBlank(message = "创建时间不能为空")
     private LocalDateTime createTime;
