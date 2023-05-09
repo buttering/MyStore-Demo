@@ -3,6 +3,7 @@ package com.csu.mypetstore.api;
 import com.csu.mypetstore.api.domain.*;
 import com.csu.mypetstore.api.persistence.*;
 import jakarta.annotation.Resource;
+
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 @SpringBootTest
-@MapperScan("com.csu.mypetstore.api.persistence")
+
 class MyPetstoreApplicationTests {
 
     @Autowired
