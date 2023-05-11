@@ -4,12 +4,14 @@ import com.csu.mypetstore.api.common.CommonResponse;
 import com.csu.mypetstore.api.common.ResponseCode;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.mybatis.spring.MyBatisSystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,6 +25,14 @@ import java.util.List;
 public class GlobalExceptionHandler {
     Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    //请求接口参数错误的异常处理
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    @ResponseBody
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public CommonResponse<Object> handleMissingParameterException(MissingServletRequestParameterException exception){
+        return CommonResponse.createResponseForError( ResponseCode.ARGUMENT_ILLEGAL.getDescription(), ResponseCode.ARGUMENT_ILLEGAL.getCode());
+    }
+
     // 封装的参数验证异常， 在controller中没有写result参数时抛出，对应@valid注解，错误信息是校验注解上的默认message
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)  // 改变HTTP响应的状态码
@@ -33,6 +43,15 @@ public class GlobalExceptionHandler {
                 formatValidErrorsMessage(e.getAllErrors()),
                 ResponseCode.ARGUMENT_ILLEGAL.getCode()
         );
+    }
+
+    // 格式化MethodArgumentNotValidException的异常信息
+    private String formatValidErrorsMessage(List<ObjectError> errors){
+        StringBuffer errorMessage = new StringBuffer();
+        errors.forEach(error -> errorMessage.append(error.getDefaultMessage()).append(";"));
+        errorMessage.deleteCharAt(errorMessage.length() - 1);
+
+        return errorMessage.toString();
     }
 
     // valid和validated注解的嵌套检验（类属性的属性）异常
@@ -46,19 +65,26 @@ public class GlobalExceptionHandler {
         );
     }
 
+    // mybatis异常
+    @ExceptionHandler(MyBatisSystemException.class)
+    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public CommonResponse<String> myBatisSystemExceptionHandler(MyBatisSystemException e){
+        logger.error(e.getCause().getMessage());
+        return CommonResponse.createResponseForError(
+                "服务器异常了...",
+                ResponseCode.ERROR.getCode()
+        );
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public CommonResponse<String> exceptionHandler(Exception e){
         logger.error(e.getMessage());
-        return CommonResponse.createResponseForError("服务器异常了...");
+          return CommonResponse.createResponseForError(
+                  "服务器异常了...",
+                  ResponseCode.ERROR.getCode()
+          );
     }
 
-    // 格式化MethodArgumentNotValidException的异常信息
-    private String formatValidErrorsMessage(List<ObjectError> errors){
-        StringBuffer errorMessage = new StringBuffer();
-        errors.forEach(error -> errorMessage.append(error.getDefaultMessage()).append(";"));
-        errorMessage.deleteCharAt(errorMessage.length() - 1);
-
-        return errorMessage.toString();
-    }
 }

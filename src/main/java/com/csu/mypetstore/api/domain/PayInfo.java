@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.csu.mypetstore.api.util.LocalDateTimeSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
@@ -25,9 +28,9 @@ public record PayInfo(
         String tradeStatus,
 
         @TableField(value = "create_time")
-        @NotBlank(message = "创建时间不能为空")
+        @JsonSerialize(using = LocalDateTimeSerializer.class)
         LocalDateTime createTime,
         @TableField(value = "update_time")
-        @NotBlank(message = "更新时间不能为空")
+        @JsonSerialize(using = LocalDateTimeSerializer.class)
         LocalDateTime updateTime
 ) { }

@@ -6,7 +6,7 @@ import com.csu.mypetstore.api.domain.User;
 public interface UserService {
     CommonResponse<User> login(String username, String password);
 
-    CommonResponse<Object> checkField(String fieldName, String fieldValue);
+    CommonResponse<Object> checkFieldDuplication(String fieldName, String fieldValue);
 
     CommonResponse<Object> register(User user);
 

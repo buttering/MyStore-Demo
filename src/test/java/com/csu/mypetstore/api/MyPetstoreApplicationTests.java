@@ -2,14 +2,16 @@ package com.csu.mypetstore.api;
 
 import com.csu.mypetstore.api.domain.*;
 import com.csu.mypetstore.api.persistence.*;
-import jakarta.annotation.Resource;
 
 import org.junit.jupiter.api.Test;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.TimeZone;
 
 @SpringBootTest
 
@@ -54,4 +56,13 @@ class MyPetstoreApplicationTests {
         userList.forEach(System.out::println);
     }
 
+    @Test
+    void testTimeFormat(){
+        ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("Asia/Shanghai"));
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'+08:00'");
+        System.out.println(zdt);
+        System.out.println(dtf.format(zdt));
+
+        TimeZone tzNY = TimeZone.getTimeZone("America/New_York");
+    }
 }

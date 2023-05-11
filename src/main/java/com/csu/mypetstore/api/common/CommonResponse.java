@@ -11,8 +11,8 @@ public class CommonResponse <T> {
     private final T data;
     private final String message;
 
-    private CommonResponse(int status, String message, T data){
-        this.code = status;
+    private CommonResponse(int code, String message, T data){
+        this.code = code;
         this.message = message;
         this.data = data;
     }
