@@ -74,7 +74,7 @@ POST
 | ------- | ------ | -------- |
 | code    | Int    | 状态码   |
 | message | String | 状态信息 |
-| data    | Object | 用户对象 |
+| data    | Object | 用户信息 |
 
 ### 请求体示例
 
@@ -89,15 +89,22 @@ POST
 
 ```json
 {
-    "code": 200,
+    "code": 0,
     "message": "SUCCESS",
     "data": {
-        "username": "wang",
-        "id": 1,
+        "id": 2,
+        "username": "user1",
+        "password": "",
+        "email": "user1@csu.edu.cn",
+        "phone": "13800138001",
+        "question": "",
+        "answer": "",
         "role": 1
     }
 }
 ```
+
+password、question、answer字段会被置空。
 
 ## 2. 用户登出
 
@@ -119,9 +126,9 @@ DELETE
 
 ### url参数
 
-| 参数 | 类型 | 描述   | 可控 |
-| ---- | ---- | ------ | ---- |
-| id   | Int  | 用户id | 否   |
+| 参数 | 类型 | 描述   | 可空 | 类别          |
+| ---- | ---- | ------ | ---- | ------------- |
+| id   | Int  | 用户id | 否   | path variable |
 
 ### 返回字段
 
@@ -134,7 +141,7 @@ DELETE
 
 ```json
 {
-    "code": 200,
+    "code": 0,
     "message": "SUCCESS"
 }
 ```
@@ -158,17 +165,17 @@ DELETE
 POST
 ```
 
-### 参数
+### 请求体参数
 
-| 参数     | 类型   | 描述     | 可空 |
-| -------- | ------ | -------- | ---- |
-| username | String | 用户名称 | 否   |
-| password | String | 用户密码 | 否   |
-| email    | String | 邮箱     | 是   |
-| phone    | String | 电话     | 是   |
-| question | String | 密保问题 | 是   |
-| answer   | String | 密保答案 | 是   |
-| role     | Int    | 用户角色 | 否   |
+| 参数            | 类型   | 描述     | 可空 |
+| --------------- | ------ | -------- | ---- |
+| username        | String | 用户名称 | 否   |
+| password        | String | 用户密码 | 否   |
+| confirmPassword | String | 重复密码 | 否   |
+| email           | String | 邮箱     | 是   |
+| phone           | String | 电话     | 是   |
+| question        | String | 密保问题 | 否   |
+| answer          | String | 密保答案 | 否   |
 
 ### 返回字段
 
@@ -183,6 +190,7 @@ POST
 {
     "username": "wang",
     "password": "password",
+    "confirmPassword": "password",
     "email": "wang@163.com",
     "phone": 1869544651,
     "question": "我的妻子是谁",
@@ -194,7 +202,7 @@ POST
 
 ```json
 {
-    "code": 200,
+    "code": 0,
     "message": "SUCCESS"
 }
 ```
@@ -219,9 +227,9 @@ GET
 
 ### url参数
 
-| 参数 | 类型 | 描述   | 可空 |
-| ---- | ---- | ------ | ---- |
-| id   | Int  | 用户id | 否   |
+| 参数 | 类型 | 描述   | 可空 | 类别          |
+| ---- | ---- | ------ | ---- | ------------- |
+| id   | Int  | 用户id | 否   | path variable |
 
 ### 返回字段
 
@@ -229,13 +237,24 @@ GET
 | ------- | ------ | -------- |
 | code    | Int    | 状态码   |
 | message | String | 状态信息 |
+| data    | Object | 用户信息 |
 
 ### 应答示例
 
 ```json
 {
-    "code": 200,
-    "message": "SUCCESS"
+    "code": 0,
+    "message": "SUCCESS",
+    "data": {
+        "id": 1,
+        "username": "wang",
+        "password": "",
+        "email": "wang@163.com",
+        "phone": 1869544651,
+        "question": "我的妻子是谁",
+        "answer": "MIKU",
+        "role": 1
+    }
 }
 ```
 
@@ -254,26 +273,26 @@ GET
 ### 请求方法
 
 ```
-PUT
+PATCH
 ```
 
 ### url参数
 
-| 参数 | 类型 | 描述   | 可空 |
-| ---- | ---- | ------ | ---- |
-| id   | Int  | 用户id | 否   |
+| 参数 | 类型 | 描述   | 可空 | 类别          |
+| ---- | ---- | ------ | ---- | ------------- |
+| id   | Int  | 用户id | 否   | path variable |
 
 ### 请求体参数
 
-| 参数     | 类型   | 描述     | 可空 |
-| -------- | ------ | -------- | ---- |
-| username | String | 用户名称 | 是   |
-| password | String | 用户密码 | 是   |
-| email    | String | 邮箱     | 是   |
-| phone    | String | 电话     | 是   |
-| question | String | 密保问题 | 是   |
-| answer   | String | 密保答案 | 是   |
-| role     | Int    | 用户角色 | 是   |
+| 参数             | 类型   | 描述     | 可空 |
+| ---------------- | ------ | -------- | ---- |
+| username         | String | 用户名称 | 是   |
+| password         | String | 用户密码 | 是   |
+| confirm_password | String | 重复密码 | 是   |
+| email            | String | 邮箱     | 是   |
+| phone            | String | 电话     | 是   |
+| question         | String | 密保问题 | 是   |
+| answer           | String | 密保答案 | 是   |
 
 ### 返回字段
 
@@ -281,7 +300,6 @@ PUT
 | ------- | ------ | -------- |
 | code    | Int    | 状态码   |
 | message | String | 状态信息 |
-| data    | Object | 用户信息 |
 
 ### 请求体示例
 
@@ -289,7 +307,7 @@ PUT
 {
     "username": "wang",
     "email": "wang@163.com",
-    "phone": 1869544651,
+    "phone": 1869544651
 }
 ```
 
@@ -297,14 +315,8 @@ PUT
 
 ```json
 {
-    "code": 200,
-    "message": "SUCCESS",
-    "data":
-    {
-        "username": "wang",
-        "id": 1,
-        "role": 1
-    }
+    "code": 0,
+    "message": "SUCCESS"
 }
 ```
 
@@ -328,9 +340,9 @@ DELETE
 
 ### url参数
 
-| 参数 | 类型   | 描述   | 可空 |
-| ---- | ------ | ------ | ---- |
-| id   | String | 用户id | 否   |
+| 参数 | 类型   | 描述   | 可空 | 类别          |
+| ---- | ------ | ------ | ---- | ------------- |
+| id   | String | 用户id | 否   | path variable |
 
 ### 请求体参数
 
@@ -350,8 +362,64 @@ DELETE
 
 ```json
 {
-    "password": D5V22WDS4XVH1213DE,
+    "password": "wang",
     "answer": "MIKU"
+}
+```
+
+### 应答示例
+
+```json
+{
+    "code": 0,
+    "message": "SUCCESS"
+}
+```
+
+## 7. 修改密码
+
+### 接口功能
+
+用户登录状态修改密码
+
+### URL
+
+```
+/api/user/{id}/password
+```
+
+### 请求方法
+
+```
+POST
+```
+
+### url参数
+
+| 参数 | 类型    | 描述   | 可空 | 类别          |
+| ---- | ------- | ------ | ---- | ------------- |
+| id   | Integer | 用户id | 否   | path variable |
+
+### 请求体参数
+
+| 参数        | 类型   | 描述   | 可空 |
+| ----------- | ------ | ------ | ---- |
+| oldPassword | String | 旧密码 | 否   |
+| newPassword | String | 新密码 | 否   |
+
+### 返回字段
+
+| 参数    | 类型   | 描述     |
+| ------- | ------ | -------- |
+| code    | Int    | 状态码   |
+| message | String | 状态信息 |
+
+### 请求体示例
+
+```json
+{
+    "oldPassword": "wang",
+    "newPassword": "WANG"
 }
 ```
 
@@ -364,15 +432,220 @@ DELETE
 }
 ```
 
-## 7. 修改密保
+## 8. 忘记密码-获取密保问题
 
-## 8. 修改密码
+### 接口功能
 
-## 9. 忘记密码-获取密保问题
+用户在忘记密码时，获得其设置的密保问题
 
-## 10. 忘记密码-验证密保
+### URL
 
-## 11. 忘记密码-修改密码
+```
+/api/user/{username}/question
+```
+
+### 请求方法
+
+```
+GET
+```
+
+### url参数
+
+| 参数     | 类型   | 描述   | 可空 | 类别          |
+| -------- | ------ | ------ | ---- | ------------- |
+| username | String | 用户名 | 否   | path variable |
+
+### 返回字段
+
+| 参数    | 类型   | 描述               |
+| ------- | ------ | ------------------ |
+| code    | Int    | 状态码             |
+| message | String | 状态信息           |
+| data    | String | 用户设置的密保问题 |
+
+### 应答示例
+
+```json
+{
+    "code": 200,
+    "message": "SUCCESS",
+    "data": "我的妻子是谁"
+}
+```
+
+## 9. 忘记密码-验证密保
+
+### 接口功能
+
+用户忘记密码时，根据用户名和设置的密保答案验证身份。
+
+### URL
+
+```
+/api/user/{username}/token
+```
+
+### 请求方法
+
+```
+GET
+```
+
+### url参数
+
+| 参数     | 类型   | 描述     | 可空 | 类别          |
+| -------- | ------ | -------- | ---- | ------------- |
+| username | String | 用户名   | 否   | path variable |
+| answer   | String | 密保回答 | 否   | request param |
+
+### 返回字段
+
+| 参数    | 类型   | 描述        |
+| ------- | ------ | ----------- |
+| code    | Int    | 状态码      |
+| message | String | 状态信息    |
+| data    | String | 携带的token |
+
+### 应答示例
+
+回答正确：
+
+```json
+{
+    "code": 200,
+    "message": "SUCCESS",
+    "data": ""
+}
+```
+
+回答错误：
+
+```json
+{
+    "code": 1,
+    "message": "密保验证错误"
+}
+```
+
+## 10. 忘记密码-修改密码
+
+### 接口功能
+
+用户忘记密码时修改密码。
+
+### URL
+
+```
+/api/user/{username}/password
+```
+
+### 请求方法
+
+```
+POST
+```
+
+### url参数
+
+| 参数     | 类型   | 描述                  | 可空 | 类别          |
+| -------- | ------ | --------------------- | ---- | ------------- |
+| username | String | 用户名                | 否   | path variable |
+| password | String | 新密码                | 否   | request param |
+| token    | String | 验证密保时返回的token | 否   | request param |
+
+### 请求体参数
+
+无
+
+### 返回字段
+
+| 参数    | 类型   | 描述     |
+| ------- | ------ | -------- |
+| code    | Int    | 状态码   |
+| message | String | 状态信息 |
+
+### 请求体示例
+
+无
+
+### 应答示例
+
+```json
+{
+    "code": 200,
+    "message": "SUCCESS"
+}
+```
+
+## 11. 验证注册字段可用
+
+### 接口功能
+
+用户注册时，验证指定字段是否已重复
+
+### URL
+
+```
+api/fields/register
+```
+
+### 请求方法
+
+```
+GET
+```
+
+### url参数
+
+| 参数  | 类型   | 描述   | 可空 | 类别          |
+| ----- | ------ | ------ | ---- | ------------- |
+| key   | String | 字段名 | 否   | request param |
+| value | String | 字段值 | 否   | request param |
+
+key可取以下值：
+
+| key 值   | 描述     |
+| -------- | -------- |
+| username | 电话号码 |
+| phone    | 电话号码 |
+| email    | 电子邮件 |
+
+### 返回字段
+
+| 参数    | 类型   | 描述     |
+| ------- | ------ | -------- |
+| code    | Int    | 状态码   |
+| message | String | 状态信息 |
+
+### 应答示例
+
+字段非重复：
+
+```json
+{
+    "code": 200,
+    "message": "SUCCESS"
+}
+```
+
+字段重复：
+
+```json
+{
+    "code": 1,
+    "message": "用户名已存在"
+}
+```
+
+参数错误：
+
+```json
+{
+    "code": 100,
+    "message": "ARGUMENT ILLEGAL"
+}
+```
 
 地址相关接口
 ==========================
@@ -392,7 +665,105 @@ DELETE
 
 ## 1. 查找商品
 
+### 接口功能
+
+根据不同的参数，给出对应的商品列表
+
+### URL
+
+```
+/api/products
+```
+
+### 请求方法
+
+```
+GET
+```
+
+### url参数
+
+| 参数    | 类型    | 描述           | 可空 | 类型          |
+| ------- | ------- | -------------- | ---- | ------------- |
+| id      | Integer | 商品类别id     | 是   | request param |
+| keyword | String  | 商品查找关键字 | 是   | request param |
+| order   | String  | 排序关键字     | 是   | request param |
+| page    | Integer | 分页页数       | 是   | request param |
+| size    | Integer | 分页大小       | 是   | request param |
+
+id 和 keyword 至少有一个非空。
+
+### 返回字段
+
+| 参数    | 类型   | 描述     |
+| ------- | ------ | -------- |
+| code    | Int    | 状态码   |
+| message | String | 状态信息 |
+| data    | Object | 商品列表 |
+
+### 应答示例
+
+```json
+{
+    "code": 200,
+    "message": "SUCCESS",
+    "data": [
+    	{
+		    "categoryId": 1,
+    		"productId": 1
+		},
+		{
+            "categoryId": 1,
+            "productId:": 2
+        }
+	]
+}
+```
+
 ## 2. 商品详细信息
+
+### 接口功能
+
+获得指定商品的详细信息
+
+### URL
+
+```
+/api/products/{id}
+```
+
+### 请求方法
+
+```
+GET
+```
+
+### url参数
+
+| 参数 | 类型    | 描述     | 可空 | 类型          |
+| ---- | ------- | -------- | ---- | ------------- |
+| id   | Integer | 商品编号 | 否   | path variable |
+
+### 返回字段
+
+| 参数    | 类型   | 描述     |
+| ------- | ------ | -------- |
+| code    | Int    | 状态码   |
+| message | String | 状态信息 |
+| data    | Object | 商品信息 |
+
+### 应答示例
+
+```json
+{
+    "code": 200,
+    "message": "SUCCESS",
+    "data":{
+		"categoryId": 1,
+		"productId": 1
+	}
+}
+```
 
 购物车相关接口
 ==========================
@@ -450,9 +821,9 @@ DELETE
 
 ### url参数
 
-| 参数 | 类型 | 描述 | 可空 |
-| ---- | ---- | ---- | ---- |
-|      |      |      |      |
+| 参数 | 类型 | 描述 | 可空 | 类别                           |
+| ---- | ---- | ---- | ---- | ------------------------------ |
+|      |      |      |      | path variable \| request param |
 
 ### 请求体参数
 
