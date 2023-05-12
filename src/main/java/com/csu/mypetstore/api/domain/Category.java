@@ -21,12 +21,24 @@ public record Category(
         Boolean status,
         String sortOrder,
 
-    @TableField(value = "create_time")
-    @NotBlank(message = "创建时间不能为空")
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    LocalDateTime createTime,
-    @TableField(value = "update_time")
-    @NotBlank(message = "更新时间不能为空")
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    LocalDateTime updateTime
-) { }
+        @TableField(value = "create_time")
+        @NotBlank(message = "创建时间不能为空")
+        @JsonSerialize(using = LocalDateTimeSerializer.class)
+        LocalDateTime createTime,
+        @TableField(value = "update_time")
+        @NotBlank(message = "更新时间不能为空")
+        @JsonSerialize(using = LocalDateTimeSerializer.class)
+        LocalDateTime updateTime
+) {
+    @Override
+    public boolean equals(Object obj) {
+        return true;
+        // TODO: 比较id
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+        // TODO:  比较id
+    }
+}

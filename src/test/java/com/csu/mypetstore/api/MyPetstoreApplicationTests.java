@@ -1,6 +1,8 @@
 package com.csu.mypetstore.api;
 
 import com.csu.mypetstore.api.domain.*;
+import com.csu.mypetstore.api.domain.dtoMapper.UserDTOMapper;
+import com.csu.mypetstore.api.dto.RegisterUserDTO;
 import com.csu.mypetstore.api.persistence.*;
 
 import org.junit.jupiter.api.Test;
@@ -64,5 +66,15 @@ class MyPetstoreApplicationTests {
         System.out.println(dtf.format(zdt));
 
         TimeZone tzNY = TimeZone.getTimeZone("America/New_York");
+    }
+
+    @Test
+    void testMapStruct(){
+        User user = new User(1, "wang", "pwd", "", "", "1", "2", 1, null, null);
+
+        RegisterUserDTO registerUserDTO = UserDTOMapper.INSTANCE.user2RegisterUserDTO(user);
+
+        System.out.println(user);
+        System.out.println(registerUserDTO);
     }
 }

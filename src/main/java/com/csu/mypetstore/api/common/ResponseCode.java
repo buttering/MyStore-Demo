@@ -8,6 +8,7 @@ public enum ResponseCode {
     ERROR(1, "ERROR"),
     ARGUMENT_ILLEGAL(100, "ARGUMENT ILLEGAL");
 
+
     private final int code;
     private final String description;
 

@@ -21,9 +21,9 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 
 @ControllerAdvice  // 基于spring aop，截获控制器层的异常
-@Slf4j  // 日志处理
+@Slf4j  // 日志处理，能够取代下面对logger实例化的语句
 public class GlobalExceptionHandler {
-    Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+//    Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     //请求接口参数错误的异常处理
     @ExceptionHandler(MissingServletRequestParameterException.class)
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)  // 改变HTTP响应的状态码
     @ResponseBody  // 将controller的方法返回的对象通过适当的转换器转换为指定的格式之后，写入到response对象的body区，通常用来返回JSON数据或者是XML数据。
     public CommonResponse<String> argumentNotValidExceptionHandler(MethodArgumentNotValidException e){
-        logger.error(e.getMessage());
+        log.error(e.getMessage());
         return CommonResponse.createResponseForError(
                 formatValidErrorsMessage(e.getAllErrors()),
                 ResponseCode.ARGUMENT_ILLEGAL.getCode()
@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public CommonResponse<String> methodConstraintViolationExceptionHandler(ConstraintViolationException e){
-        logger.error(e.getMessage());
+        log.error(e.getMessage());
         return CommonResponse.createResponseForError(
             e.getMessage()
         );
@@ -70,7 +70,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public CommonResponse<String> myBatisSystemExceptionHandler(MyBatisSystemException e){
-        logger.error(e.getCause().getMessage());
+        log.error(e.getCause().getMessage());
         return CommonResponse.createResponseForError(
                 "服务器异常了...",
                 ResponseCode.ERROR.getCode()
@@ -80,7 +80,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public CommonResponse<String> exceptionHandler(Exception e){
-        logger.error(e.getMessage());
+        log.error(e.getMessage());
           return CommonResponse.createResponseForError(
                   "服务器异常了...",
                   ResponseCode.ERROR.getCode()
