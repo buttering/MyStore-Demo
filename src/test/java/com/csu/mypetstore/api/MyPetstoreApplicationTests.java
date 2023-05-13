@@ -1,7 +1,7 @@
 package com.csu.mypetstore.api;
 
 import com.csu.mypetstore.api.domain.*;
-import com.csu.mypetstore.api.domain.dtoMapper.UserDTOMapper;
+import com.csu.mypetstore.api.dto.dtoMapper.UserDTOMapper;
 import com.csu.mypetstore.api.dto.RegisterUserDTO;
 import com.csu.mypetstore.api.persistence.*;
 

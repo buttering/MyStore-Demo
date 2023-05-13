@@ -376,7 +376,127 @@ DELETE
 }
 ```
 
-## 7. 修改密码
+## 7. 忘记密码-获取密保问题
+
+### 接口功能
+
+用户在忘记密码时，获得其设置的密保问题
+
+> 使用get请求，把username置于path中，会限制用户名不能有特殊字符和空格
+
+### URL
+
+```
+/api/getpwdquestion
+```
+
+### 请求方法
+
+```
+POST
+```
+
+### 请求体参数
+
+| 参数     | 类型   | 描述   | 可空 |
+| -------- | ------ | ------ | ---- |
+| username | String | 用户名 | 否   |
+
+### 返回字段
+
+| 参数    | 类型   | 描述                         |
+| ------- | ------ | ---------------------------- |
+| code    | Int    | 状态码                       |
+| message | String | 状态信息                     |
+| data    | Object | 用户设置的密保问题以及用户id |
+
+### 应答示例
+
+success：
+
+```json
+{
+    "code": 200,
+    "message": "SUCCESS",
+    "data": {
+        "question": "我的妻子是谁",
+        "id": 1
+    }
+}
+```
+
+error：
+
+```json
+{
+    "code": 1,
+    "message": "未设置密保问题，如需找回密码请联系管理员"
+}
+```
+
+```json
+{
+    "code": 1,
+    "message": "用户不存在"
+}
+```
+
+## 8. 忘记密码-验证密保
+
+### 接口功能
+
+用户忘记密码时，根据用户名和设置的密保答案验证身份。
+
+### URL
+
+```
+/api/user/{id}/pwdtoken
+```
+
+### 请求方法
+
+```
+GET
+```
+
+### url参数
+
+| 参数     | 类型    | 描述     | 可空 | 类别          |
+| -------- | ------- | -------- | ---- | ------------- |
+| id       | Integer | 用户id   | 否   | path variable |
+| question | String  | 密保问题 | 否   | request param |
+| answer   | String  | 密保回答 | 否   | request param |
+
+### 返回字段
+
+| 参数      | 类型     | 描述       |
+|---------|--------|----------|
+| code    | Int    | 状态码      |
+| message | String | 状态信息     |
+| data    | String | 携带的token |
+
+### 应答示例
+
+回答正确：
+
+```json
+{
+    "code": 200,
+    "message": "SUCCESS",
+    "data": "21ce02a7e-7f12-42e6-bdf8-a343e5f3462c"
+}
+```
+
+回答错误：
+
+```json
+{
+    "code": 1,
+    "message": "密保验证错误"
+}
+```
+
+## 9. 修改密码
 
 ### 接口功能
 
@@ -432,102 +552,6 @@ POST
 }
 ```
 
-## 8. 忘记密码-获取密保问题
-
-### 接口功能
-
-用户在忘记密码时，获得其设置的密保问题
-
-### URL
-
-```
-/api/user/{username}/question
-```
-
-### 请求方法
-
-```
-GET
-```
-
-### url参数
-
-| 参数       | 类型     | 描述  | 可空 | 类别            |
-|----------|--------|-----|----|---------------|
-| username | String | 用户名 | 否  | path variable |
-
-### 返回字段
-
-| 参数      | 类型     | 描述        |
-|---------|--------|-----------|
-| code    | Int    | 状态码       |
-| message | String | 状态信息      |
-| data    | String | 用户设置的密保问题 |
-
-### 应答示例
-
-```json
-{
-    "code": 200,
-    "message": "SUCCESS",
-    "data": "我的妻子是谁"
-}
-```
-
-## 9. 忘记密码-验证密保
-
-### 接口功能
-
-用户忘记密码时，根据用户名和设置的密保答案验证身份。
-
-### URL
-
-```
-/api/user/{username}/token
-```
-
-### 请求方法
-
-```
-GET
-```
-
-### url参数
-
-| 参数       | 类型     | 描述   | 可空 | 类别            |
-|----------|--------|------|----|---------------|
-| username | String | 用户名  | 否  | path variable |
-| answer   | String | 密保回答 | 否  | request param |
-
-### 返回字段
-
-| 参数      | 类型     | 描述       |
-|---------|--------|----------|
-| code    | Int    | 状态码      |
-| message | String | 状态信息     |
-| data    | String | 携带的token |
-
-### 应答示例
-
-回答正确：
-
-```json
-{
-    "code": 200,
-    "message": "SUCCESS",
-    "data": ""
-}
-```
-
-回答错误：
-
-```json
-{
-    "code": 1,
-    "message": "密保验证错误"
-}
-```
-
 ## 10. 忘记密码-修改密码
 
 ### 接口功能
@@ -537,7 +561,7 @@ GET
 ### URL
 
 ```
-/api/user/{username}/password
+/api/user/{id}/password
 ```
 
 ### 请求方法
@@ -548,11 +572,11 @@ POST
 
 ### url参数
 
-| 参数       | 类型     | 描述            | 可空 | 类别            |
-|----------|--------|---------------|----|---------------|
-| username | String | 用户名           | 否  | path variable |
-| password | String | 新密码           | 否  | request param |
-| token    | String | 验证密保时返回的token | 否  | request param |
+| 参数        | 类型    | 描述                  | 可空 | 类别          |
+| ----------- | ------- | --------------------- | ---- | ------------- |
+| id          | Integer | 用户id                | 否   | path variable |
+| newpassword | String  | 新密码                | 否   | request param |
+| token       | String  | 验证密保时返回的token | 否   | request param |
 
 ### 请求体参数
 

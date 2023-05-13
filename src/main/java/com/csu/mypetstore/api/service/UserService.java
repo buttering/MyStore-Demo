@@ -8,17 +8,17 @@ public interface UserService {
 
     CommonResponse<Object> checkFieldDuplication(String fieldName, String fieldValue);
 
-    CommonResponse<Object> register(User user);
+    CommonResponse<Object> register(User user, String confirmPassword);
 
-    CommonResponse<String> getForgetQuestion(String username);
+    CommonResponse<Object> getForgetQuestion(String username);
 
-    CommonResponse<String> checkForgetAnswer(String username, String question,String answer);
+    CommonResponse<String> checkForgetAnswer(Integer id, String question,String answer);
 
-    CommonResponse<Object> resetForgetPassword(String username, String newPassword, String forgetToken);
+    CommonResponse<String> resetForgetPassword(Integer id, String newPassword, String forgetToken);
 
     CommonResponse<User> getUserDetail(Integer userId);
 
-    CommonResponse<Object> resetPassword(String oldPassword, String newPassword, User user);
+    CommonResponse<String> resetPassword(Integer id, String oldPassword, String newPassword);
 
     CommonResponse<Object> updateUserInfo(User user);
 }

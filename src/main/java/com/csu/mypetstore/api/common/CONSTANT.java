@@ -14,7 +14,12 @@ public final class CONSTANT {
 
     public static final String LOGIN_USER = "loginUser";
 
-    public static final HashMap<String, String> REGISTER_FIELD_MAP = new HashMap<>();
+    public static final HashMap<String, String> REGISTER_FIELD_MAP = (new HashMap<>());
+    static {
+        REGISTER_FIELD_MAP.put("username", "用户名");
+        REGISTER_FIELD_MAP.put("phone", "电话号码");
+        REGISTER_FIELD_MAP.put("email", "电子邮件");
+    }
 
     public interface CHECK_FIELD {
         String USERNAME = "username";
@@ -22,9 +27,5 @@ public final class CONSTANT {
         String EMAIL = "email";
     }
 
-    public CONSTANT(){
-        REGISTER_FIELD_MAP.put("username", "用户名");
-        REGISTER_FIELD_MAP.put("phone", "电话号码");
-        REGISTER_FIELD_MAP.put("email", "电子邮件");
-    }
+
 }

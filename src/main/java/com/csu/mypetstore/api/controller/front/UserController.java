@@ -3,14 +3,17 @@ package com.csu.mypetstore.api.controller.front;
 import com.csu.mypetstore.api.common.CONSTANT;
 import com.csu.mypetstore.api.common.CommonResponse;
 import com.csu.mypetstore.api.domain.User;
+import com.csu.mypetstore.api.dto.dtoMapper.UserDTOMapper;
 import com.csu.mypetstore.api.dto.LoginUserDTO;
 import com.csu.mypetstore.api.dto.RegisterUserDTO;
 import com.csu.mypetstore.api.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import org.checkerframework.checker.units.qual.N;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 public class UserController {
@@ -25,8 +28,8 @@ public class UserController {
     // VO：View对象/Value对象，后端向前端返回数据的封装/业务逻辑层和DAO层数据交换的封装
     // BO：领域（业务）对象，和实际业务一一对应
     @PostMapping("api/session")
-    public CommonResponse<User> login(@Valid @RequestBody LoginUserDTO userDTO, HttpSession session){
-        CommonResponse<User> result = userService.login(userDTO.getUsername(), userDTO.getPassword());
+    public CommonResponse<User> login(@Valid @RequestBody LoginUserDTO loginUserDTO, HttpSession session){
+        CommonResponse<User> result = userService.login(loginUserDTO.getUsername(), loginUserDTO.getPassword());
         if (result.isSuccess()){
             session.setAttribute(CONSTANT.LOGIN_USER, result.getData());
         }
@@ -41,35 +44,36 @@ public class UserController {
 
     @PostMapping("api/user")
     public CommonResponse<Object> register(@Valid @RequestBody RegisterUserDTO registerUserDTO) {
-        return userService.register(dto2User(registerUserDTO));
+        User user = UserDTOMapper.INSTANCE.registerUserDTO2User(registerUserDTO);
+        return userService.register(user, registerUserDTO.confirmPassword());
     }
 
-    private User dto2User(RegisterUserDTO registerUserDTO){
-
-        // TODO: 便捷类型转换
-        return new User(
-                null,
-                registerUserDTO.username(),
-                registerUserDTO.password(),
-                registerUserDTO.email(),
-                registerUserDTO.phone(),
-                registerUserDTO.question(),
-                registerUserDTO.answer(),
-                null,
-                null,
-                null
-        );
-    }
-
-
+    @GetMapping("api/fields/register")
     public CommonResponse<Object> check_register_field(
-            @RequestParam @NotBlank(message = "字段名不能为空") String fieldName,
-            @RequestParam @NotBlank(message = "字段值不能为空") String fieldValue) {
+            @RequestParam(value = "key") @NotBlank(message = "字段名不能为空") String fieldName,
+            @RequestParam(value = "value") @NotBlank(message = "字段值不能为空") String fieldValue) {
         return userService.checkFieldDuplication(fieldName, fieldValue);
     }
 
-    public CommonResponse<Object> getForgetQuestion() {
-        // TODO: 获取忘记密码验证问题
-        return null;
+    @PostMapping("api/getpwdquestion")
+    public CommonResponse<Object> getForgetQuestion(@RequestBody Map<String, String> reqMap) {
+        String username = reqMap.get("username");
+        return userService.getForgetQuestion(username);
+    }
+
+    @GetMapping("api/user/{id}/pwdtoken")
+    public CommonResponse<String> checkForgetAnswer(@PathVariable Integer id, @RequestParam String question, @RequestParam String answer){
+        return userService.checkForgetAnswer(id, question, answer);
+    }
+
+    @PostMapping("api/user/{id}/password")
+    public CommonResponse<String> resetPassword(@PathVariable Integer id, @RequestBody Map<String, String> reqMap) {
+        String oldPassword = reqMap.get("oldpassword");
+        String newPassword = reqMap.get("newpassword");
+        String token = reqMap.get("token");
+
+        if (!StringUtils.isEmpty(oldPassword))
+            return userService.resetPassword(id, oldPassword, newPassword);
+        return userService.resetForgetPassword(id, newPassword, token);
     }
 }
