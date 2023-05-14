@@ -167,15 +167,15 @@ POST
 
 ### 请求体参数
 
-| 参数              | 类型     | 描述   | 可空 |
-|-----------------|--------|------|----|
-| username        | String | 用户名称 | 否  |
-| password        | String | 用户密码 | 否  |
-| confirmPassword | String | 重复密码 | 否  |
-| email           | String | 邮箱   | 是  |
-| phone           | String | 电话   | 是  |
-| question        | String | 密保问题 | 否  |
-| answer          | String | 密保答案 | 否  |
+| 参数            | 类型   | 描述     | 可空 |
+| --------------- | ------ | -------- | ---- |
+| username        | String | 用户名称 | 否   |
+| password        | String | 用户密码 | 否   |
+| confirmPassword | String | 重复密码 | 否   |
+| email           | String | 邮箱     | 是   |
+| phone           | String | 电话     | 是   |
+| question        | String | 密保问题 | 否   |
+| answer          | String | 密保答案 | 否   |
 
 ### 返回字段
 
@@ -251,12 +251,14 @@ GET
         "password": "",
         "email": "wang@163.com",
         "phone": 1869544651,
-        "question": "我的妻子是谁",
-        "answer": "MIKU",
+        "question": "",
+        "answer": "",
         "role": 1
     }
 }
 ```
+
+password、question、answer字段会被置空。
 
 ## 5. 更新用户信息
 
@@ -284,15 +286,15 @@ PATCH
 
 ### 请求体参数
 
-| 参数               | 类型     | 描述   | 可空 |
-|------------------|--------|------|----|
-| username         | String | 用户名称 | 是  |
-| password         | String | 用户密码 | 是  |
-| confirm_password | String | 重复密码 | 是  |
-| email            | String | 邮箱   | 是  |
-| phone            | String | 电话   | 是  |
-| question         | String | 密保问题 | 是  |
-| answer           | String | 密保答案 | 是  |
+| 参数     | 类型   | 描述     | 可空 |
+| -------- | ------ | -------- | ---- |
+| username | String | 用户名称 | 是   |
+| email    | String | 邮箱     | 是   |
+| phone    | String | 电话     | 是   |
+| question | String | 密保问题 | 是   |
+| answer   | String | 密保答案 | 是   |
+
+如果 question 不为空，则 answer 必须非空。
 
 ### 返回字段
 
@@ -416,7 +418,7 @@ success：
 
 ```json
 {
-    "code": 200,
+    "code": 0,
     "message": "SUCCESS",
     "data": {
         "question": "我的妻子是谁",
@@ -481,7 +483,7 @@ GET
 
 ```json
 {
-    "code": 200,
+    "code": 0,
     "message": "SUCCESS",
     "data": "21ce02a7e-7f12-42e6-bdf8-a343e5f3462c"
 }
@@ -545,10 +547,39 @@ POST
 
 ### 应答示例
 
+success：
+
 ```json
 {
-    "code": 200,
+    "code": 0,
     "message": "SUCCESS"
+}
+```
+
+error：
+
+```json
+{
+    "code": 1,
+    "message": "用户不存在"
+}
+```
+```json
+{
+    "code": 1,
+    "message": "旧密码输入错误"
+}
+```
+```json
+{
+    "code": 1,
+    "message": "密码长度不足"
+}
+```
+```json
+{
+    "code": 1,
+    "message": "密码不能包含空格"
 }
 ```
 
@@ -572,15 +603,16 @@ POST
 
 ### url参数
 
-| 参数        | 类型    | 描述                  | 可空 | 类别          |
-| ----------- | ------- | --------------------- | ---- | ------------- |
-| id          | Integer | 用户id                | 否   | path variable |
-| newpassword | String  | 新密码                | 否   | request param |
-| token       | String  | 验证密保时返回的token | 否   | request param |
+| 参数 | 类型    | 描述   | 可空 | 类别          |
+| ---- | ------- | ------ | ---- | ------------- |
+| id   | Integer | 用户id | 否   | path variable |
 
 ### 请求体参数
 
-无
+| 参数        | 类型   | 描述                  | 可空 |
+| ----------- | ------ | --------------------- | ---- |
+| newpassword | String | 新密码                | 否   |
+| token       | String | 验证密保时返回的token | 否   |
 
 ### 返回字段
 
@@ -591,17 +623,43 @@ POST
 
 ### 请求体示例
 
-无
-
-### 应答示例
-
 ```json
 {
-    "code": 200,
-    "message": "SUCCESS"
+    "newpassowd": "WANG",
+    "token": "21ce02a7e-7f12-42e6-bdf8-a343e5f3462c"
 }
 ```
 
+
+
+### 应答示例
+success:
+
+```json
+{
+    "code": 0,
+    "message": "SUCCESS"
+}
+```
+error:
+```json
+{
+    "code": 1,
+    "message": "用户不存在"
+}
+```
+```json
+{
+    "code": 1,
+    "message": "token无效或已过期"
+}
+```
+```json
+{
+    "code": 1,
+    "message": "密码更新失败"
+}
+```
 ## 11. 验证注册字段可用
 
 ### 接口功能
@@ -648,7 +706,7 @@ key可取以下值：
 
 ```json
 {
-    "code": 200,
+    "code":0,
     "message": "SUCCESS"
 }
 ```
@@ -729,7 +787,7 @@ id 和 keyword 至少有一个非空。
 
 ```json
 {
-    "code": 200,
+    "code": 0,
     "message": "SUCCESS",
     "data": [
     	{
@@ -780,7 +838,7 @@ GET
 
 ```json
 {
-    "code": 200,
+    "code": 0,
     "message": "SUCCESS",
     "data":{
 		"categoryId": 1,
@@ -872,7 +930,7 @@ GET
 
 ```json
 {
-    "code": 200,
+    "code": 0,
     "message": "SUCCESS"
 }
 ```

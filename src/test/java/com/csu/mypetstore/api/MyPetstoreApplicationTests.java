@@ -1,5 +1,7 @@
 package com.csu.mypetstore.api;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.csu.mypetstore.api.domain.*;
 import com.csu.mypetstore.api.dto.dtoMapper.UserDTOMapper;
 import com.csu.mypetstore.api.dto.RegisterUserDTO;
@@ -76,5 +78,25 @@ class MyPetstoreApplicationTests {
 
         System.out.println(user);
         System.out.println(registerUserDTO);
+    }
+
+    @Test
+    void testUpdate(){
+        User user = userMapper.selectOne(Wrappers.<User>query().eq("id", 2));
+        System.out.println(user);
+
+//        user = user.withAnswer("LEN");
+//        userMapper.updateById(user);
+
+//        user = user.withAnswer("RIN");
+//        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+//        updateWrapper.eq("id", 3);
+//        userMapper.update(user, updateWrapper);
+
+        UpdateWrapper<User> updateWrapper = Wrappers.<User>update().eq("id", 2).set("answer", "LUKA");
+        userMapper.update(null, updateWrapper);
+
+        user = userMapper.selectOne(Wrappers.<User>query().eq("id", 2));
+        System.out.println(user);
     }
 }

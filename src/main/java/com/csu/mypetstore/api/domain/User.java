@@ -25,10 +25,10 @@ public record User(
         String password,
         String email,
         String phone,
-        String question,
         @NotBlank(message = "密保问题不能为空")
-        String answer,
+        String question,
         @NotBlank(message = "密保回答不能为空")
+        String answer,
         Integer role,
 
         @TableField(value = "create_time")

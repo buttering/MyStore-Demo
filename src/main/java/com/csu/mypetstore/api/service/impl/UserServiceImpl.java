@@ -1,6 +1,7 @@
 package com.csu.mypetstore.api.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.csu.mypetstore.api.common.CONSTANT;
 import com.csu.mypetstore.api.common.CommonResponse;
@@ -26,8 +27,6 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final Cache<String, String> localCache;
 
-//    private final static HashMap<String, String> FIELD_MAP = new HashMap<>();
-
     public UserServiceImpl(UserMapper userMapper, PasswordEncoder passwordEncoder, Cache<String, String> cache) {
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
@@ -45,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
         boolean isPasswordMatch = passwordEncoder.matches(password, user.password());
         if (isPasswordMatch) {
-            user = user.withPassword(StringUtils.EMPTY);  // 和字符串处理相关的操作（判等、判空、null等），使用工具类
+            user = user.withPassword(StringUtils.EMPTY).withAnswer(StringUtils.EMPTY).withAnswer(StringUtils.EMPTY);
             return CommonResponse.createResponseForSuccess(user);
         } else {
             return CommonResponse.createResponseForError("用户名或密码错误");
@@ -53,8 +52,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CommonResponse<Object> register(User user, String confirmPassword) {
-        CommonResponse<Object> checkResult = checkFieldDuplication("username", user.username());
+    public CommonResponse<String> register(User user, String confirmPassword) {
+        CommonResponse<String> checkResult = checkFieldDuplication("username", user.username());
         if (!checkResult.isSuccess()) return checkResult;
         checkResult = checkFieldDuplication("email", user.email());
         if (!checkResult.isSuccess()) return checkResult;
@@ -78,7 +77,7 @@ public class UserServiceImpl implements UserService {
 
     // 检查字段是否重复，不重复则返回成功
     @Override
-    public CommonResponse<Object> checkFieldDuplication(String fieldName, String fieldValue) {
+    public CommonResponse<String> checkFieldDuplication(String fieldName, String fieldValue) {
         String chineseFieldName = CONSTANT.REGISTER_FIELD_MAP.get(fieldName);
         if (chineseFieldName == null){
             return CommonResponse.createResponseForError(ResponseCode.ARGUMENT_ILLEGAL.getDescription(), ResponseCode.ARGUMENT_ILLEGAL.getCode());
@@ -94,19 +93,24 @@ public class UserServiceImpl implements UserService {
     }
 
     // 检查密码格式是否符合要求
-    private CommonResponse<Object> checkPassword(String password, String confirmPassword) {
-        int minimumLength = 8;
-
+    private CommonResponse<String> checkPassword(String password, String confirmPassword) {
         if ( ! StringUtils.equals(password, confirmPassword))
             return CommonResponse.createResponseForError("两次输入密码不一致");
+        return checkPassword(password);
+    }
+
+    private CommonResponse<String> checkPassword(String password) {
+        int minimumLength = 8;
         if (password.length() < minimumLength)
             return CommonResponse.createResponseForError("密码长度不足");
+        if (StringUtils.countMatches(password, ' ') > 0)
+            return CommonResponse.createResponseForError("密码不能包含空格");
         return CommonResponse.createResponseForSuccess();
     }
 
     @Override
-    public CommonResponse<Object> getForgetQuestion(String username) {
-        CommonResponse<Object> checkResult = checkFieldDuplication("username", username);
+    public CommonResponse<ForgetQuestionVO> getForgetQuestion(String username) {
+        CommonResponse<String> checkResult = checkFieldDuplication("username", username);
         if (checkResult.isSuccess())
             return CommonResponse.createResponseForError("用户不存在");
 
@@ -120,7 +124,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public CommonResponse<String> checkForgetAnswer(Integer id, String question, String answer) {
-        // TODO: 验证答案
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id).eq("question", question).eq("answer", answer);
 
@@ -137,8 +140,44 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public CommonResponse<String> resetPassword(Integer id, String oldPassword, String newPassword) {
+        User user = userMapper.selectOne(Wrappers.<User>query().eq("id", id));
+        if (user == null)
+            return CommonResponse.createResponseForError("用户不存在");
+        if (passwordEncoder.matches(oldPassword, user.password()))
+            return CommonResponse.createResponseForError("旧密码输入错误");
+        CommonResponse<String> checkResult = checkPassword(newPassword);
+        if (!checkResult.isSuccess())
+            return checkResult;
+
+        return updatePassword(user, newPassword);
+    }
+
+    @Override
     public CommonResponse<String> resetForgetPassword(Integer id, String newPassword, String forgetToken) {
-        return null;
+        User user = userMapper.selectOne(Wrappers.<User>query().eq("id", id));
+        if (user == null)
+            return CommonResponse.createResponseForError("用户不存在");
+        String cacheToken = localCache.getIfPresent(String.valueOf(id));
+        log.info("Get token from LocalCache : ({},{}) {}" ,id, cacheToken, LocalDateTime.now());
+        if (StringUtils.isEmpty(cacheToken) || !StringUtils.equals(cacheToken, forgetToken))
+            return CommonResponse.createResponseForError("token无效或已过期");
+
+        return updatePassword(user, newPassword);
+    }
+
+    // 已经通过校验，修改密码
+    private CommonResponse<String> updatePassword(User user, String password){
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id", user.id())
+                .set("password", passwordEncoder.encode(password))
+                .set("update_time", LocalDateTime.now());
+        long row = userMapper.update(null, updateWrapper);
+
+        if (row > 0)
+            return CommonResponse.createResponseForSuccess();
+        log.error("id:{}用户密码更新失败, {}", user.id(), LocalDateTime.now());
+        return CommonResponse.createResponseForError("密码更新失败");
     }
 
     @Override
@@ -147,13 +186,45 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CommonResponse<String> resetPassword(Integer id, String oldPassword, String newPassword) {
-        // TODO: 完成逻辑
-        return null;
-    }
+    public CommonResponse<String> updateUserInfo(User user) {
+        CommonResponse<String> checkResult = checkFieldDuplication("username", user.username());
+        if (!checkResult.isSuccess()) return checkResult;
+        checkResult = checkFieldDuplication("email", user.email());
+        if (!checkResult.isSuccess()) return checkResult;
+        checkResult = checkFieldDuplication("phone", user.phone());
+        if (!checkResult.isSuccess()) return checkResult;
 
-    @Override
-    public CommonResponse<Object> updateUserInfo(User user) {
-        return null;
+        boolean isAllNull = true;
+        UpdateWrapper <User> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id", user.id());
+        if (!StringUtils.isBlank(user.username())) {
+            updateWrapper.set("username", user.username());
+            isAllNull = false;
+        }
+        if (!StringUtils.isBlank(user.email())) {
+            updateWrapper.set("email", user.email());
+            isAllNull = false;
+        }
+        if (!StringUtils.isBlank(user.phone())) {
+            updateWrapper.set("phone", user.phone());
+            isAllNull = false;
+        }
+        if (!StringUtils.isBlank(user.question())) {
+            if (StringUtils.isBlank(user.answer()))
+                return CommonResponse.createResponseForError("密保未设置对应回答");
+            else {
+                updateWrapper.set("question", user.question());
+                updateWrapper.set("answer", user.answer());
+                isAllNull = false;
+            }
+        }
+
+        if (!isAllNull) {
+            updateWrapper.set("update_time", LocalDateTime.now());
+            long row = userMapper.update(null, updateWrapper);
+            if (row > 0)
+                return CommonResponse.createResponseForSuccess();
+        }
+        return CommonResponse.createResponseForError("用户信息更新失败");
     }
 }

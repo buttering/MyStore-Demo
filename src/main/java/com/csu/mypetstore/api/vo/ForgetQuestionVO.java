@@ -1,7 +1,7 @@
 package com.csu.mypetstore.api.vo;
 
 public record ForgetQuestionVO(
-        String username,
+        String question,
         Integer id
 ) {
 }
