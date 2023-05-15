@@ -29,7 +29,7 @@ public class UserController {
 
     @PostMapping("api/session")
     public CommonResponse<User> login(@Valid @RequestBody LoginUserDTO loginUserDTO, HttpSession session){
-        CommonResponse<User> result = userService.login(loginUserDTO.getUsername(), loginUserDTO.getPassword());
+        CommonResponse<User> result = userService.login(loginUserDTO.username(), loginUserDTO.password());
         if (result.isSuccess()){
             session.setAttribute(CONSTANT.LOGIN_USER, result.getData());
         }

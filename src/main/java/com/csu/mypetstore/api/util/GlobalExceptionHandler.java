@@ -4,6 +4,7 @@ import com.csu.mypetstore.api.common.CommonResponse;
 import com.csu.mypetstore.api.common.ResponseCode;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.mybatis.spring.MyBatisSystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +71,13 @@ public class GlobalExceptionHandler {
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public CommonResponse<String> myBatisSystemExceptionHandler(MyBatisSystemException e){
+        // Mybatis-plus在向数据库插入记录时，会返回一个主键值，并自动赋值到对应实体对象中。
+        // 但是record类是只读的，因此会导致一个错误
+        // 这个错误可以忽略。
+        if (StringUtils.countMatches(e.getCause().getCause().getMessage(), "No setter found for the keyProperty") >= 1){
+            return CommonResponse.createResponseForSuccess("注册用户成功");
+        }
+
         log.error(e.getCause().getMessage());
         return CommonResponse.createResponseForError(
                 "服务器异常了...",
