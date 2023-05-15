@@ -1,4 +1,4 @@
-package com.csu.mypetstore.api.dto;
+package com.csu.mypetstore.api.domain.dto;
 
 import jakarta.validation.constraints.NotBlank;
 

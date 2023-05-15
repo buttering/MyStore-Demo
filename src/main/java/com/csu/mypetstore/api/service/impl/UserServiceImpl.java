@@ -9,7 +9,7 @@ import com.csu.mypetstore.api.common.ResponseCode;
 import com.csu.mypetstore.api.domain.User;
 import com.csu.mypetstore.api.persistence.UserMapper;
 import com.csu.mypetstore.api.service.UserService;
-import com.csu.mypetstore.api.vo.ForgetQuestionVO;
+import com.csu.mypetstore.api.domain.vo.ForgetQuestionVO;
 import com.github.benmanes.caffeine.cache.Cache;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;

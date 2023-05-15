@@ -3,8 +3,10 @@ package com.csu.mypetstore.api;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.csu.mypetstore.api.domain.*;
-import com.csu.mypetstore.api.dto.dtoMapper.UserDTOMapper;
-import com.csu.mypetstore.api.dto.RegisterUserDTO;
+import com.csu.mypetstore.api.domain.structMapper.ProductStructMapper;
+import com.csu.mypetstore.api.domain.structMapper.UserStructMapper;
+import com.csu.mypetstore.api.domain.dto.RegisterUserDTO;
+import com.csu.mypetstore.api.domain.vo.ProductDetailVO;
 import com.csu.mypetstore.api.persistence.*;
 
 import org.junit.jupiter.api.Test;
@@ -74,10 +76,20 @@ class MyPetstoreApplicationTests {
     void testMapStruct(){
         User user = new User(1, "wang", "pwd", "", "", "1", "2", 1, null, null);
 
-        RegisterUserDTO registerUserDTO = UserDTOMapper.INSTANCE.user2RegisterUserDTO(user);
+        RegisterUserDTO registerUserDTO = UserStructMapper.INSTANCE.user2RegisterDTO(user);
 
         System.out.println(user);
         System.out.println(registerUserDTO);
+    }
+
+    @Test
+    void testMultiplyMapStruct(){
+        Product product = productMapper.selectById("10");
+
+        ProductDetailVO productDetailVO = ProductStructMapper.INSTANCE.product2DetailVO(product, 2, "192.168.0.0.1");
+
+        System.out.println(product);
+        System.out.println(productDetailVO);
     }
 
     @Test

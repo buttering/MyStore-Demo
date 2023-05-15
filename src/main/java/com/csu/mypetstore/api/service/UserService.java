@@ -2,7 +2,7 @@ package com.csu.mypetstore.api.service;
 
 import com.csu.mypetstore.api.common.CommonResponse;
 import com.csu.mypetstore.api.domain.User;
-import com.csu.mypetstore.api.vo.ForgetQuestionVO;
+import com.csu.mypetstore.api.domain.vo.ForgetQuestionVO;
 
 public interface UserService {
     CommonResponse<User> login(String username, String password);

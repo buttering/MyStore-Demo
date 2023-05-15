@@ -4,11 +4,12 @@ import com.csu.mypetstore.api.common.CONSTANT;
 import com.csu.mypetstore.api.common.CommonResponse;
 import com.csu.mypetstore.api.common.ResponseCode;
 import com.csu.mypetstore.api.domain.User;
-import com.csu.mypetstore.api.dto.dtoMapper.UserDTOMapper;
-import com.csu.mypetstore.api.dto.LoginUserDTO;
-import com.csu.mypetstore.api.dto.RegisterUserDTO;
+
+import com.csu.mypetstore.api.domain.structMapper.UserStructMapper;
+import com.csu.mypetstore.api.domain.dto.LoginUserDTO;
+import com.csu.mypetstore.api.domain.dto.RegisterUserDTO;
 import com.csu.mypetstore.api.service.UserService;
-import com.csu.mypetstore.api.vo.ForgetQuestionVO;
+import com.csu.mypetstore.api.domain.vo.ForgetQuestionVO;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -16,7 +17,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 public class UserController {
@@ -44,7 +44,7 @@ public class UserController {
 
     @PostMapping("api/user")
     public CommonResponse<String> register(@Valid @RequestBody RegisterUserDTO registerUserDTO) {
-        User user = UserDTOMapper.INSTANCE.registerUserDTO2User(registerUserDTO);
+        User user = UserStructMapper.INSTANCE.registerDTO2User(registerUserDTO);
         return userService.register(user, registerUserDTO.confirmPassword());
     }
 

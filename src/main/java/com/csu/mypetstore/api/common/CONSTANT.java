@@ -1,5 +1,7 @@
 package com.csu.mypetstore.api.common;
 
+import lombok.Getter;
+
 import java.util.HashMap;
 
 public final class CONSTANT {
@@ -27,5 +29,19 @@ public final class CONSTANT {
         String EMAIL = "email";
     }
 
+    @Getter
+    public enum ProductStatus {
 
+        ON_SALE(1, "on_sale"),
+        TAKE_DOWN(2, "take_down"),
+        DELETE(3, "delete");
+
+        private final int code;
+        private final String description;
+
+        ProductStatus(int code, String description){
+            this.code = code;
+            this.description = description;
+        }
+    }
 }
