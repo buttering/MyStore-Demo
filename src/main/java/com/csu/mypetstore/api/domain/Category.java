@@ -18,7 +18,7 @@ public record Category(
 
         @NotBlank(message = "商品类别名不能为空")
         String name,
-        Boolean status,
+        Integer status,
         String sortOrder,
 
         @TableField(value = "create_time")

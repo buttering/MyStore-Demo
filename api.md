@@ -841,11 +841,107 @@ GET
     "code": 0,
     "message": "SUCCESS",
     "data":{
-		"categoryId": 1,
-		"productId": 1
-	}
+        "id": 10,
+        "categoryId": 241,
+        "name": "Au On Na",
+        "subtitle": "Mrs.",
+        "detail": "Y01tSWl4e7",
+        "price": 74,
+        "stock": 175,
+        "status": 1,
+        "createTime": "2012-12-28T05:31:52+08:00",
+        "updateTime": "2018-04-05T03:34:49+08:00",
+        "parentCategoryId": 2,
+        "imageList": [
+            {
+                "image": {
+                    "id": "b088d2bb92587204fae8d7e8521adc67",
+                    "pid": 1,
+                    "type": 1,
+                    "alt": "picture",
+                    "createTime": "2023-05-16T15:49:56+08:00"
+                },
+                "token": {
+        			"tmpSecretId": "",
+                    "tmpSecretKey": "",
+                    "sessionToken": ""
+    			}
+            }
+        ]
+    }
 }
 ```
+
+imageList字段信息见下表
+
+| 参数       | 类型    | 描述                                                         |
+| ---------- | ------- | ------------------------------------------------------------ |
+| image      | Object  | 产品的图像                                                   |
+| token      | Object  | 图像对应的临时密钥，用于向对象存储服务获取图片，字段与获取图片临时密钥接口一致。可空，为空时可使用图片密钥接口再次尝试获取。 |
+| id         | String  | 图像编号                                                     |
+| pid        | Integer | 对应产品编号                                                 |
+| type       | Integer | 图像类型,main image:1, sub image: 2                          |
+| alt        | String  | 图像文字描述                                                 |
+| createTime | String  | 图像上传时间                                                 |
+
+图片相关接口
+==========================
+
+## 1. 获取图片临时密钥
+
+### 接口功能
+
+获取指定图片的密钥，用于向对象存储服务获取图片。
+
+### URL
+
+```
+/api/image/{id}
+```
+
+### 请求方法
+
+```
+GET 
+```
+
+### url参数
+
+| 参数 | 类型   | 描述     | 可空 | 类别          |
+| ---- | ------ | -------- | ---- | ------------- |
+| id   | String | 图像编号 | 否   | path variable |
+
+### 返回字段
+
+| 参数    | 类型   | 描述               |
+| ------- | ------ | ------------------ |
+| code    | Int    | 状态码             |
+| message | String | 状态信息           |
+| data    | Object | 获取图片必要的信息 |
+data内容：
+| 参数         | 类型   | 描述                 |
+| ------------ | ------ | -------------------- |
+| tmpSecretId  | String | 临时密钥SecretId     |
+| tmpSecretKey | String | 临时密钥SecretKey    |
+| sessionToken | String | 临时密钥sessionToken |
+| startTime    |        |                      |
+| expiredTime  |        |                      |
+
+### 应答示例
+
+```json
+{
+    "code": 0,
+    "message": "SUCCESS",
+    "data": {
+        "tmpSecretId": "AKIDLphLyrJ0E-P_wbT7LwdnvSjk_7WvX67X0kQ2PPV7wuo2MQMqKyfHkrK_Yap81Fqx",
+        "tmpSecretKey": "Xb72buUNay4/4xE994m7CNSuJYqsmPhGAJ5oX4m7wwI=",
+        "sessionToken": "4TLfetbjxgoBG3uWKgeei4S3FhBOZ20afc5e600e39700b44525a2bde14ecdce48p5zfItn5K2eiQIyk7m8KvVjfT3HGur-xFFgF_u3cRw4oLY_RuajilL9R9i2-gjuPeeEy_dZD42OcNseJl51ivRs8vM3MGL4b_ZjlU2qdzG1uW0md5pCqcdfVJ0ILyLCwI10d0r74W0zULIT-i0iyD27a0d-nQGFhcqwNT4wnllKV1L8yVUSLlTWWxc_9iu76g5wOvygNfLUdAiZWkDSEMwUQmNNhR2tSBOecsVTHdJk5rjBlpZbRXKHZVeiuwhZNWmO8YuOwyw7NgrbdjfTdM9rHwDZELy7OX57VB_2p0KEm02Oq7r3MKBXONulrd5x6sNOrxkeFULzodvTdAfCL29JI4mbduLbiB2yKgAfVT0cnjp5Za9prZeZ0zbkwxQgvMh2u3zxNccHwiH0GXEkg7uzLvsnBr9vyJUfjQJIo0Q"
+    }
+}
+```
+
+## 2. 上传商品图片
 
 购物车相关接口
 ==========================

@@ -83,6 +83,12 @@
 <!--			<artifactId>lombok-mapstruct-binding</artifactId>-->
 <!--			<version>0.2.0</version>-->
 <!--		</dependency>-->
+		<!-- 腾讯云cos服务临时密钥 SDK -->
+		<dependency>
+			<groupId>com.qcloud</groupId>
+			<artifactId>cos-sts_api</artifactId>
+			<version>3.1.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

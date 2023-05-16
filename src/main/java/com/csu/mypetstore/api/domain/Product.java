@@ -7,10 +7,11 @@ import com.csu.mypetstore.api.util.LocalDateTimeSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.NotNull;
+
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record Product(
         @TableId(type = IdType.AUTO)
@@ -22,10 +23,10 @@ public record Product(
         @NotBlank(message = "产品名不能为空")
         String name,
         String subtitle,
-        @TableField(value = "main_image")
-        String mainImage,
-        @TableField(value = "sub_image")
-        String subImage,
+//        @TableField(value = "main_image")
+//        String mainImage,
+//        @TableField(value = "sub_image")
+//        List<String> subImageList,
         String detail,
         @NotNull(message = "价格不能为空")
         BigDecimal price,

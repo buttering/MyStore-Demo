@@ -14,8 +14,18 @@ spring:
       exclude: test/**
   freemarker:
     cache: false  #页面不加载缓存，修改即时生效
+  jackson:
+    time-zone: Asia/Chongqing
 
 mybatis-plus:
   global-config:
     db-config:
       table-underline: false
+
+tencent-cloud:
+  cos:
+    secretId: AKID30lNuHcprJdqsmZBal6Ik04C9LOF1ayE
+    secretKey:
+    durationSeconds: 300  # 密钥有效期（s）
+    bucket: mystore-1312558924  # 桶名称
+    region: ap-guangzhou  # 区域

@@ -44,4 +44,9 @@ public final class CONSTANT {
             this.description = description;
         }
     }
+
+    public interface ProductImageType {
+        int MAIN_IMAGE = 1;
+        int SUB_IMAGE = 2;
+    }
 }

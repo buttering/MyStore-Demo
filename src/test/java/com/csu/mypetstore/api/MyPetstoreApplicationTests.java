@@ -2,20 +2,31 @@ package com.csu.mypetstore.api;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.csu.mypetstore.api.common.CONSTANT;
+import com.csu.mypetstore.api.common.CommonResponse;
 import com.csu.mypetstore.api.domain.*;
 import com.csu.mypetstore.api.domain.structMapper.ProductStructMapper;
 import com.csu.mypetstore.api.domain.structMapper.UserStructMapper;
 import com.csu.mypetstore.api.domain.dto.RegisterUserDTO;
 import com.csu.mypetstore.api.domain.vo.ProductDetailVO;
+import com.csu.mypetstore.api.domain.vo.TencentCOSVO;
 import com.csu.mypetstore.api.persistence.*;
 
+import com.csu.mypetstore.api.service.COSService;
+import com.tencent.cloud.Response;
+import jakarta.validation.Valid;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -37,6 +48,13 @@ class MyPetstoreApplicationTests {
     ProductMapper productMapper;
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    COSService cosService;
+    @Autowired
+    ProductImageMapper productImageMapper;
+
+    @Value("${tencent-cloud.cos.bucket}")
+    String bucket;
 
     @Test
     void contextLoads() {
@@ -86,7 +104,7 @@ class MyPetstoreApplicationTests {
     void testMultiplyMapStruct(){
         Product product = productMapper.selectById("10");
 
-        ProductDetailVO productDetailVO = ProductStructMapper.INSTANCE.product2DetailVO(product, 2, "192.168.0.0.1");
+        ProductDetailVO productDetailVO = ProductStructMapper.INSTANCE.product2DetailVO(product,2);
 
         System.out.println(product);
         System.out.println(productDetailVO);
@@ -110,5 +128,26 @@ class MyPetstoreApplicationTests {
 
         user = userMapper.selectOne(Wrappers.<User>query().eq("id", 2));
         System.out.println(user);
+    }
+
+    @Test
+    void configurationParamTest(){
+        System.out.println(bucket);
+    }
+
+    @Test
+    void tencentCOSTest() {
+        CommonResponse<?> commonResponse = cosService.generatePolicy("1");
+        Response response = (Response) commonResponse.getData();
+        System.out.println(response.credentials.tmpSecretId);
+        System.out.println(response.credentials.tmpSecretKey);
+        System.out.println(response.credentials.sessionToken);
+    }
+
+    @Test
+    void testInsert() {
+
+        Category category = new Category(2, 1, "computer", CONSTANT.ProductStatus.ON_SALE.getCode(), null, LocalDateTime.now(), LocalDateTime.now());
+        categoryMapper.insert(category);
     }
 }
