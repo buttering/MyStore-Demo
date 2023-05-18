@@ -765,42 +765,76 @@ GET
 
 ### url参数
 
-| 参数      | 类型      | 描述      | 可空 | 类型            |
-|---------|---------|---------|----|---------------|
-| id      | Integer | 商品类别id  | 是  | request param |
-| keyword | String  | 商品查找关键字 | 是  | request param |
-| order   | String  | 排序关键字   | 是  | request param |
-| page    | Integer | 分页页数    | 是  | request param |
-| size    | Integer | 分页大小    | 是  | request param |
+| 参数    | 类型    | 描述                              | 可空 | 类型          |
+| ------- | ------- | --------------------------------- | ---- | ------------- |
+| cid     | Integer | 商品类别id，与keyword不能同时为空 | 是   | request param |
+| keyword | String  | 商品查找关键字                    | 是   | request param |
+| order   | String  | 排序关键字                        | 是   | request param |
+| asc     | Boolean | 是否升序，默认为false             | 是   | request param |
+| page    | Integer | 分页页数                          | 是   | request param |
+| size    | Integer | 分页大小                          | 是   | request param |
 
 id 和 keyword 至少有一个非空。
 
 ### 返回字段
 
-| 参数      | 类型     | 描述   |
-|---------|--------|------|
-| code    | Int    | 状态码  |
-| message | String | 状态信息 |
-| data    | Object | 商品列表 |
+| 参数    | 类型   | 描述                                  |
+| ------- | ------ | ------------------------------------- |
+| code    | Int    | 状态码                                |
+| message | String | 状态信息                              |
+| data    | Object | 分页展示的商品列表，由records字段存储 |
 
 ### 应答示例
 
 ```json
 {
     "code": 0,
-    "message": "SUCCESS",
-    "data": [
-    	{
-		    "categoryId": 1,
-    		"productId": 1
-		},
-		{
-            "categoryId": 1,
-            "productId:": 2
-        }
-	]
+    "data": {
+        "records": [
+            {
+                "id": 9,
+                "categoryId": 2,
+                "name": "Zheng Jialun",
+                "subtitle": "Miss.",
+                "price": 910,
+                "status": 1,
+                "imageList": []
+            },
+            {
+                "id": 10,
+                "categoryId": 2,
+                "name": "Au On Na",
+                "subtitle": "Mrs.",
+                "price": 74,
+                "status": 1,
+                "imageList": []
+            }
+        ],
+        "total": 10,
+        "size": 2,
+        "current": 5,
+        "orders": [],
+        "optimizeCountSql": true,
+        "searchCount": true,
+        "maxLimit": null,
+        "countId": null,
+        "pages": 5
+    },
+    "message": "SUCCESS"
 }
 ```
+
+data字段信息见下表
+
+| 参数    | 类型    | 描述                              |
+| ------- | ------- | --------------------------------- |
+| total   | Integer | 查找到的商品数量，为0表示没有商品 |
+| records | List    | 各商品信息                        |
+| size    | Integer | 当前页大小                        |
+| current | Integer | 当前页                            |
+| pages   | Integer | 总页数                            |
+
+
 
 ## 2. 商品详细信息
 
@@ -877,7 +911,7 @@ imageList字段信息见下表
 | 参数       | 类型    | 描述                                                         |
 | ---------- | ------- | ------------------------------------------------------------ |
 | image      | Object  | 产品的图像                                                   |
-| token      | Object  | 图像对应的临时密钥，用于向对象存储服务获取图片，字段与获取图片临时密钥接口一致。可空，为空时可使用图片密钥接口再次尝试获取。 |
+| token      | Object  | 图像对应的临时密钥，用于向对象存储服务获取图片，字段与获取图片临时密钥接口一致。可为null，表示服务端获取token失败，为空时可使用图片密钥接口再次尝试获取。 |
 | id         | String  | 图像编号                                                     |
 | pid        | Integer | 对应产品编号                                                 |
 | type       | Integer | 图像类型,main image:1, sub image: 2                          |
@@ -919,13 +953,13 @@ GET
 | message | String | 状态信息           |
 | data    | Object | 获取图片必要的信息 |
 data内容：
-| 参数         | 类型   | 描述                 |
-| ------------ | ------ | -------------------- |
-| tmpSecretId  | String | 临时密钥SecretId     |
-| tmpSecretKey | String | 临时密钥SecretKey    |
-| sessionToken | String | 临时密钥sessionToken |
-| startTime    |        |                      |
-| expiredTime  |        |                      |
+| 参数         | 类型   | 描述                       |
+| ------------ | ------ | -------------------------- |
+| tmpSecretId  | String | 临时密钥SecretId           |
+| tmpSecretKey | String | 临时密钥SecretKey          |
+| sessionToken | String | 临时密钥sessionToken       |
+| startTime    |        | 暂时禁用，看客户端是否需要 |
+| expiredTime  |        | 暂时禁用                   |
 
 ### 应答示例
 

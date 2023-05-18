@@ -2,7 +2,7 @@ package com.csu.mypetstore.api.common;
 
 import lombok.Getter;
 
-import java.util.HashMap;
+import java.util.*;
 
 public final class CONSTANT {
     // 将常量置于接口中的好处
@@ -16,7 +16,7 @@ public final class CONSTANT {
 
     public static final String LOGIN_USER = "loginUser";
 
-    public static final HashMap<String, String> REGISTER_FIELD_MAP = (new HashMap<>());
+    public static final HashMap<String, String> REGISTER_FIELD_MAP = new HashMap<>();
     static {
         REGISTER_FIELD_MAP.put("username", "用户名");
         REGISTER_FIELD_MAP.put("phone", "电话号码");
@@ -48,5 +48,13 @@ public final class CONSTANT {
     public interface ProductImageType {
         int MAIN_IMAGE = 1;
         int SUB_IMAGE = 2;
+    }
+
+    public static final Set<String> ORDER_BY_FIELD_LIST = new HashSet<>();
+    static {
+        ORDER_BY_FIELD_LIST.add("category_id");
+        ORDER_BY_FIELD_LIST.add("name");
+        ORDER_BY_FIELD_LIST.add("price");
+        ORDER_BY_FIELD_LIST.add("stock");
     }
 }

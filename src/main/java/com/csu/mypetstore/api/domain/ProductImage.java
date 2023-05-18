@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @TableName("productimage")
 public class ProductImage {
-        @TableId(type = IdType.ASSIGN_UUID)
+        @TableId(type = IdType.ASSIGN_UUID)  // 使用UUID时，record类型会导致错误且无法向数据库增加记录
         private final String id;  // 图片索引，使用uuid
         private final Integer pid;  // 产品id
         private final Integer type;  // 图片类型

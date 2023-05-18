@@ -35,6 +35,8 @@ public record ProductDetailVO (
     // 图片信息及对应临时密钥
     List<Map<String, Object>> imageList
 ) {
+
+
     public ProductDetailVO addImage(ProductImage image, TencentCOSVO token) {
         List<Map<String, Object>> imageList;
         imageList = Objects.requireNonNullElseGet(this.imageList, ArrayList::new);
@@ -42,6 +44,7 @@ public record ProductDetailVO (
         imageMap.put("token", token);
         imageMap.put("image", image);
         imageList.add(imageMap);
+
         return new ProductDetailVO(id, categoryId, name, subtitle, detail, price, stock, status, createTime, updateTime, parentCategoryId, imageList);
     }
 }

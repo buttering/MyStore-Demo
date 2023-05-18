@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -83,6 +84,14 @@ public class GlobalExceptionHandler {
                 "服务器异常了...",
                 ResponseCode.ERROR.getCode()
         );
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseStatus(code = HttpStatus.METHOD_NOT_ALLOWED)
+    @ResponseBody
+    public CommonResponse<String> httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e){
+        log.error(e.getMessage());
+        return CommonResponse.createResponseForError("HTTP请求方法错误");
     }
 
     @ExceptionHandler(Exception.class)

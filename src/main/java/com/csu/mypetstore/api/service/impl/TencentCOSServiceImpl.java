@@ -36,7 +36,7 @@ public class TencentCOSServiceImpl implements COSService {
             config.put("bucket", BUCKET);
             config.put("region", REGION);
             String [] allowPrefixes = new String[] {  // TODO: 一次请求，根据类别获取一类图片的token，置于redis中，这些图片共用一个token
-//                    "*"
+                    "*"
             };
             config.put("allowPrefixes", allowPrefixes);  // TODO: 最小权限
             String[] allowActions = new String[] {

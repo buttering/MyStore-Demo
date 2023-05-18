@@ -2,6 +2,7 @@ package com.csu.mypetstore.api;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.csu.mypetstore.api.common.CONSTANT;
 import com.csu.mypetstore.api.common.CommonResponse;
 import com.csu.mypetstore.api.domain.*;
@@ -9,13 +10,20 @@ import com.csu.mypetstore.api.domain.structMapper.ProductStructMapper;
 import com.csu.mypetstore.api.domain.structMapper.UserStructMapper;
 import com.csu.mypetstore.api.domain.dto.RegisterUserDTO;
 import com.csu.mypetstore.api.domain.vo.ProductDetailVO;
+import com.csu.mypetstore.api.domain.vo.ProductListVO;
 import com.csu.mypetstore.api.domain.vo.TencentCOSVO;
 import com.csu.mypetstore.api.persistence.*;
 
 import com.csu.mypetstore.api.service.COSService;
+import com.csu.mypetstore.api.service.CategoryService;
+import com.csu.mypetstore.api.service.ProductService;
+import com.csu.mypetstore.api.service.impl.ProductServiceImpl;
+import com.csu.mypetstore.api.util.ListBeanUtils;
+import com.csu.mypetstore.api.util.ListBeanUtilsForPage;
 import com.tencent.cloud.Response;
 import jakarta.validation.Valid;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +37,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.function.Supplier;
 
 @SpringBootTest
 
@@ -52,6 +61,10 @@ class MyPetstoreApplicationTests {
     COSService cosService;
     @Autowired
     ProductImageMapper productImageMapper;
+    @Autowired
+    ProductServiceImpl productService;
+    @Autowired
+    CategoryService categoryService;
 
     @Value("${tencent-cloud.cos.bucket}")
     String bucket;
@@ -147,7 +160,30 @@ class MyPetstoreApplicationTests {
     @Test
     void testInsert() {
 
-        Category category = new Category(2, 1, "computer", CONSTANT.ProductStatus.ON_SALE.getCode(), null, LocalDateTime.now(), LocalDateTime.now());
+        Category category = new Category(7, 6, "banana", CONSTANT.ProductStatus.ON_SALE.getCode(), null, LocalDateTime.now(), LocalDateTime.now());
         categoryMapper.insert(category);
+    }
+
+    @Test
+    void testChildrenCategory() {
+        List<Category> categoryList = categoryService.getCategoryList(4).getData();
+        System.out.println(categoryList);
+    }
+
+    @Test
+    void testRecordCopy() {
+//        List<Product> source = productMapper.selectList(Wrappers.<Product>query().eq("id", 1));
+//
+//        List<ProductListVO> target = ListBeanUtils.copyListProperties(source, ProductListVO::new, (a, b)-> {
+//            return;
+//        });
+//        System.out.println(target);
+    }
+
+    @Test
+    void testFunctional() {
+        Supplier<ProductListVO> supplier = ProductListVO::new;
+        ProductListVO product = supplier.get();
+        System.out.println(product);
     }
 }

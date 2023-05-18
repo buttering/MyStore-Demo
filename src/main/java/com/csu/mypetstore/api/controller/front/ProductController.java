@@ -1,21 +1,15 @@
 package com.csu.mypetstore.api.controller.front;
 
-import com.csu.mypetstore.api.common.CONSTANT;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.csu.mypetstore.api.common.CommonResponse;
 import com.csu.mypetstore.api.domain.Product;
-import com.csu.mypetstore.api.domain.ProductImage;
-import com.csu.mypetstore.api.domain.structMapper.ProductStructMapper;
 import com.csu.mypetstore.api.domain.vo.ProductDetailVO;
-import com.csu.mypetstore.api.domain.vo.TencentCOSVO;
+import com.csu.mypetstore.api.domain.vo.ProductListVO;
 import com.csu.mypetstore.api.persistence.ProductMapper;
 import com.csu.mypetstore.api.service.ProductService;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class ProductController {
@@ -34,14 +28,16 @@ public class ProductController {
         return productService.getProductDetail(pid);
     }
 
-    public CommonResponse<List<Product>> getProductList(
+    @GetMapping("api/products")
+    public CommonResponse<Page<ProductListVO>> getProductList(
             @RequestParam(required = false) Integer cid,  // 要求递归查找
             @RequestParam(required = false) String keyword,
-            @RequestParam(defaultValue = "") String orderBy,
-            @RequestParam(defaultValue = "1") int pageNum,
-            @RequestParam(defaultValue = "2") int pageSize
+            @RequestParam(defaultValue = "") String order,
+            @RequestParam(defaultValue = "false") Boolean asc,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "2") int size
     ) {
         // TODO: 完成逻辑
-        return null;
+        return productService.getProductList(cid, keyword, order, asc, page, size);
     }
 }

@@ -3,6 +3,7 @@ package com.csu.mypetstore.api.domain.structMapper;
 import com.csu.mypetstore.api.domain.Product;
 import com.csu.mypetstore.api.domain.ProductImage;
 import com.csu.mypetstore.api.domain.vo.ProductDetailVO;
+import com.csu.mypetstore.api.domain.vo.ProductListVO;
 import com.csu.mypetstore.api.domain.vo.TencentCOSVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -30,4 +31,5 @@ public interface ProductStructMapper {
 
     ProductDetailVO product2DetailVO(Product product, Integer parentCategoryId);
 
+    ProductListVO product2ListVO(Product product);
 }
