@@ -7,6 +7,8 @@ import com.csu.mypetstore.api.common.CONSTANT;
 import com.csu.mypetstore.api.common.CommonResponse;
 import com.csu.mypetstore.api.common.ResponseCode;
 import com.csu.mypetstore.api.domain.User;
+import com.csu.mypetstore.api.domain.structMapper.UserStructMapper;
+import com.csu.mypetstore.api.domain.vo.UserInfoVO;
 import com.csu.mypetstore.api.persistence.UserMapper;
 import com.csu.mypetstore.api.service.UserService;
 import com.csu.mypetstore.api.domain.vo.ForgetQuestionVO;
@@ -34,7 +36,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CommonResponse<User> login(String username, String password) {
+    public CommonResponse<UserInfoVO> login(String username, String password) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username);
         User user = userMapper.selectOne(queryWrapper);
@@ -44,8 +46,9 @@ public class UserServiceImpl implements UserService {
 
         boolean isPasswordMatch = passwordEncoder.matches(password, user.password());
         if (isPasswordMatch) {
-            user = user.withPassword(StringUtils.EMPTY).withAnswer(StringUtils.EMPTY).withAnswer(StringUtils.EMPTY);
-            return CommonResponse.createResponseForSuccess(user);
+            UserInfoVO userInfoVO = UserStructMapper.INSTANCE.user2InfoVO(user);
+//            user = user.withPassword(StringUtils.EMPTY).withAnswer(StringUtils.EMPTY).withAnswer(StringUtils.EMPTY);
+            return CommonResponse.createResponseForSuccess(userInfoVO);
         } else {
             return CommonResponse.createResponseForError("用户名或密码错误");
         }
@@ -181,7 +184,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CommonResponse<User> getUserDetail(Integer userId) {
+    public CommonResponse<UserInfoVO> getUserDetail(Integer userId) {
         return null;
     }
 

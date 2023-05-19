@@ -8,6 +8,7 @@ import com.csu.mypetstore.api.domain.User;
 import com.csu.mypetstore.api.domain.structMapper.UserStructMapper;
 import com.csu.mypetstore.api.domain.dto.LoginUserDTO;
 import com.csu.mypetstore.api.domain.dto.RegisterUserDTO;
+import com.csu.mypetstore.api.domain.vo.UserInfoVO;
 import com.csu.mypetstore.api.service.UserService;
 import com.csu.mypetstore.api.domain.vo.ForgetQuestionVO;
 import jakarta.servlet.http.HttpSession;
@@ -28,8 +29,8 @@ public class UserController {
     }
 
     @PostMapping("api/session")
-    public CommonResponse<User> login(@Valid @RequestBody LoginUserDTO loginUserDTO, HttpSession session){
-        CommonResponse<User> result = userService.login(loginUserDTO.username(), loginUserDTO.password());
+    public CommonResponse<UserInfoVO> login(@Valid @RequestBody LoginUserDTO loginUserDTO, HttpSession session){
+        CommonResponse<UserInfoVO> result = userService.login(loginUserDTO.username(), loginUserDTO.password());
         if (result.isSuccess()){
             session.setAttribute(CONSTANT.LOGIN_USER, result.getData());
         }
@@ -37,7 +38,7 @@ public class UserController {
     }
 
     @DeleteMapping("api/session/{id}")
-    public CommonResponse<User> logout(@PathVariable Integer id, HttpSession session) {  // 设计冗余属性id，之后的重构可能用到
+    public CommonResponse<String> logout(@PathVariable Integer id, HttpSession session) {  // 设计冗余属性id，之后的重构可能用到
         session.removeAttribute(CONSTANT.LOGIN_USER);
         return CommonResponse.createResponseForSuccess("退出登录成功");
     }
@@ -86,10 +87,11 @@ public class UserController {
     }
 
     @GetMapping("api/user/{id}")
-    public CommonResponse<User> getUserInfo(@PathVariable Integer id, HttpSession session) {
-        User user = (User) session.getAttribute(CONSTANT.LOGIN_USER);
+    public CommonResponse<UserInfoVO> getUserInfo(@PathVariable Integer id, HttpSession session) {
+        UserInfoVO user = (UserInfoVO) session.getAttribute(CONSTANT.LOGIN_USER);
         if (user == null)
             return CommonResponse.createResponseForError(ResponseCode.NEED_LOGIN.getDescription(), ResponseCode.NEED_LOGIN.getCode());
+        // TODO：使用UserVO进行返回
         return CommonResponse.createResponseForSuccess(user);
     }
 
@@ -98,7 +100,7 @@ public class UserController {
             @PathVariable Integer id,
             @RequestBody User updateUser,  //不加数据验证，字段均可为空
             HttpSession session) {
-        User user = (User) session.getAttribute(CONSTANT.LOGIN_USER);
+        UserInfoVO user = (UserInfoVO) session.getAttribute(CONSTANT.LOGIN_USER);
         if (user == null || !id.equals(user.id()))
             return CommonResponse.createResponseForError(ResponseCode.NEED_LOGIN.getDescription(), ResponseCode.NEED_LOGIN.getCode());
 

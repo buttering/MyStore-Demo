@@ -5,9 +5,16 @@ import com.csu.mypetstore.api.common.CommonResponse;
 import com.csu.mypetstore.api.domain.vo.ProductDetailVO;
 import com.csu.mypetstore.api.domain.vo.ProductListVO;
 
+import java.util.List;
+import java.util.Map;
+
 public interface ProductService {
     CommonResponse<ProductDetailVO> getProductDetail(Integer pid);
 
     CommonResponse<Page<ProductListVO>> getProductList(Integer cid, String keyword, String orderBy, Boolean asc, int pageNum, int pageSize);
+
+    public List<Map<String, Object>> getImageToken(Integer pid, boolean withToken);
+
+    public List<Map<String, Object>> getImageToken(Integer pid);
 
 }

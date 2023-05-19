@@ -21,6 +21,7 @@ import com.csu.mypetstore.api.service.CategoryService;
 import com.csu.mypetstore.api.service.ProductService;
 import com.csu.mypetstore.api.util.ListBeanUtilsForPage;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -56,13 +57,20 @@ public class ProductServiceImpl implements ProductService {
         return CommonResponse.createResponseForSuccess(productDetailVO);
     }
 
-    private List<Map<String, Object>> getImageToken(Integer pid) {
+    @Override
+    public List<Map<String, Object>> getImageToken(Integer pid) {
+        return getImageToken(pid, true);
+    }
+
+    @Override
+    public List<Map<String, Object>> getImageToken(Integer pid, boolean withToken) {
         List<ProductImage> productImageList = productImageMapper.selectList(Wrappers.<ProductImage>query().eq("pid", pid));
         List<Map<String, Object>> mapList = new ArrayList<>();
         for (ProductImage productImage: productImageList) {
             String imageId = productImage.getId();
-            TencentCOSVO token = (TencentCOSVO) cosService.generatePolicy(imageId).getData();
-
+            TencentCOSVO token = null;
+            if (withToken)
+                token = (TencentCOSVO) cosService.generatePolicy(imageId, CONSTANT.IMAGE_PERMISSION.GET_OBJECT).getData();
             Map<String, Object> map = new HashMap<>();
             map.put("image", productImage);
             map.put("token", token);
@@ -92,8 +100,10 @@ public class ProductServiceImpl implements ProductService {
         if (!categoryIdList.isEmpty())
             queryWrapper.in("category_id", categoryIdList);
         if (!StringUtils.isBlank(keyword)) {
-            queryWrapper.like("name", keyword);
-            queryWrapper.like("subtitle", keyword);
+            // TODO: 忽略大小写
+//            queryWrapper.like("supper(name)", "supper("+keyword+")").or();
+            queryWrapper.like("name", keyword).or();
+            queryWrapper.like("subtitle", keyword).or();
             queryWrapper.like("detail", keyword);
         }
         if (!StringUtils.isBlank(orderBy) && CONSTANT.ORDER_BY_FIELD_LIST.contains(orderBy)) {
@@ -104,16 +114,17 @@ public class ProductServiceImpl implements ProductService {
         }
 
         Page<Product> result = new Page<>(pageNum, pageSize);
-        result = productMapper.selectPage(result, queryWrapper);
+        result = productMapper.selectPage(result, queryWrapper);  // 分页结果位于record属性中
 
-        Page<ProductListVO> resultDetail = ListBeanUtilsForPage.copyPageProperties(
+        Page<ProductListVO> voResult = ListBeanUtilsForPage.copyPageProperties(
                 result,
                 ProductListVO::new,  // 大坑！final字段的属性不能被重复赋值，因此不能有无参构造器。故不能给属性加final关键字，也不能使用record类型。
                 (product, productListVO) -> {
+                    // TODO:仅需返回主图
                     productListVO.setImageList(getImageToken(product.id()));
                 }
         );
-        return CommonResponse.createResponseForSuccess(resultDetail);
+        return CommonResponse.createResponseForSuccess(voResult);
     }
 
 

@@ -1,5 +1,6 @@
 package com.csu.mypetstore.api.common;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.*;
@@ -30,6 +31,7 @@ public final class CONSTANT {
     }
 
     @Getter
+    @AllArgsConstructor
     public enum ProductStatus {
 
         ON_SALE(1, "on_sale"),
@@ -38,11 +40,6 @@ public final class CONSTANT {
 
         private final int code;
         private final String description;
-
-        ProductStatus(int code, String description){
-            this.code = code;
-            this.description = description;
-        }
     }
 
     public interface ProductImageType {
@@ -56,5 +53,19 @@ public final class CONSTANT {
         ORDER_BY_FIELD_LIST.add("name");
         ORDER_BY_FIELD_LIST.add("price");
         ORDER_BY_FIELD_LIST.add("stock");
+    }
+
+    public interface CART_ITEM_STATUS {
+        int CHECKED = 1;
+        int UNCHECKED = 0;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum IMAGE_PERMISSION {
+        GET_OBJECT("name/cos:GetObject");
+
+        private final String permission;
+
     }
 }

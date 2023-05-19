@@ -2,7 +2,6 @@ package com.csu.mypetstore.api;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.csu.mypetstore.api.common.CONSTANT;
 import com.csu.mypetstore.api.common.CommonResponse;
 import com.csu.mypetstore.api.domain.*;
@@ -16,25 +15,18 @@ import com.csu.mypetstore.api.persistence.*;
 
 import com.csu.mypetstore.api.service.COSService;
 import com.csu.mypetstore.api.service.CategoryService;
-import com.csu.mypetstore.api.service.ProductService;
 import com.csu.mypetstore.api.service.impl.ProductServiceImpl;
-import com.csu.mypetstore.api.util.ListBeanUtils;
-import com.csu.mypetstore.api.util.ListBeanUtilsForPage;
+import com.github.benmanes.caffeine.cache.Cache;
 import com.tencent.cloud.Response;
-import jakarta.validation.Valid;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.function.Supplier;
@@ -46,7 +38,7 @@ class MyPetstoreApplicationTests {
     @Autowired
     AddressMapper addressMapper;
     @Autowired
-    CartMapper cartMapper;
+    CartItemMapper cartMapper;
     @Autowired
     CategoryMapper categoryMapper;
     @Autowired
@@ -65,6 +57,10 @@ class MyPetstoreApplicationTests {
     ProductServiceImpl productService;
     @Autowired
     CategoryService categoryService;
+    @Autowired
+    Cache<String, String> localCache;
+    @Autowired
+    Cache<String, ImageToken> imageTokenCache;
 
     @Value("${tencent-cloud.cos.bucket}")
     String bucket;
@@ -77,7 +73,7 @@ class MyPetstoreApplicationTests {
     @Test
     void myBatis(){
         List<Address> addressList = addressMapper.selectList(null);
-        List<Cart> cartList = cartMapper.selectList(null);
+        List<CartItem> cartList = cartMapper.selectList(null);
         List<Category> categoryList = categoryMapper.selectList(null);
         List<OrderItem> orderItemList = orderItemMapper.selectList(null);
         List<PayInfo> payInfoList = payInfoMapper.selectList(null);
@@ -150,7 +146,7 @@ class MyPetstoreApplicationTests {
 
     @Test
     void tencentCOSTest() {
-        CommonResponse<?> commonResponse = cosService.generatePolicy("1");
+        CommonResponse<?> commonResponse = cosService.generatePolicy("1", CONSTANT.IMAGE_PERMISSION.GET_OBJECT);
         Response response = (Response) commonResponse.getData();
         System.out.println(response.credentials.tmpSecretId);
         System.out.println(response.credentials.tmpSecretKey);
@@ -185,5 +181,16 @@ class MyPetstoreApplicationTests {
         Supplier<ProductListVO> supplier = ProductListVO::new;
         ProductListVO product = supplier.get();
         System.out.println(product);
+    }
+
+    @Test
+    void testCache() {
+        ImageToken imageToken = new ImageToken("1", new TencentCOSVO("A", "a", "1"), "a");
+        localCache.put("aaa", "aaa");
+        localCache.put("aaa", "bbb");
+        imageTokenCache.put("aaa", imageToken);
+
+        System.out.println(localCache.getIfPresent("aaa"));
+        System.out.println(imageTokenCache.getIfPresent("aaa"));
     }
 }

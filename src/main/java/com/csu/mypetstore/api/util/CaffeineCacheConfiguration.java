@@ -1,5 +1,6 @@
 package com.csu.mypetstore.api.util;
 
+import com.csu.mypetstore.api.domain.ImageToken;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.context.annotation.Bean;
@@ -9,19 +10,22 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 public class CaffeineCacheConfiguration {
-    // 初始容量
-    private final static int CAPACITY = 100;
-    // 最大容量
-    private final static int MAX_SIZE = 500;
-    // 持续时间
-    private final static int DURATION = 500;
 
     @Bean
     public Cache<String, String> localCache() {
         return Caffeine.newBuilder()
-                .initialCapacity(CAPACITY)
-                .maximumSize(MAX_SIZE)
-                .expireAfterWrite(DURATION, TimeUnit.MINUTES)
+                .initialCapacity(100)
+                .maximumSize(500)
+                .expireAfterWrite(5, TimeUnit.MINUTES)
+                .build();
+    }
+
+    @Bean
+    public Cache<String, ImageToken> imageCache() {
+        return Caffeine.newBuilder()
+                .initialCapacity(100)
+                .maximumSize(1000)
+                .expireAfterWrite(50, TimeUnit.MINUTES)
                 .build();
     }
 }

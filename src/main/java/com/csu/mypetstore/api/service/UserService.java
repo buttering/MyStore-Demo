@@ -3,9 +3,10 @@ package com.csu.mypetstore.api.service;
 import com.csu.mypetstore.api.common.CommonResponse;
 import com.csu.mypetstore.api.domain.User;
 import com.csu.mypetstore.api.domain.vo.ForgetQuestionVO;
+import com.csu.mypetstore.api.domain.vo.UserInfoVO;
 
 public interface UserService {
-    CommonResponse<User> login(String username, String password);
+    CommonResponse<UserInfoVO> login(String username, String password);
 
     CommonResponse<String> checkFieldDuplication(String fieldName, String fieldValue);
 
@@ -17,7 +18,7 @@ public interface UserService {
 
     CommonResponse<String> resetForgetPassword(Integer id, String newPassword, String forgetToken);
 
-    CommonResponse<User> getUserDetail(Integer userId);
+    CommonResponse<UserInfoVO> getUserDetail(Integer userId);
 
     CommonResponse<String> resetPassword(Integer id, String oldPassword, String newPassword);
 

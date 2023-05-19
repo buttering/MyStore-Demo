@@ -26,10 +26,10 @@ public record Product(
 //        @TableField(value = "main_image")
 //        String mainImage,
 //        @TableField(value = "sub_image")
-//        List<String> subImageList,
+//        List<String> subImageList,"
         String detail,
         @NotNull(message = "价格不能为空")
-        BigDecimal price,
+        BigDecimal price,  // 涉及价格、总价等浮点型数据的运算必须使用BigDecimal类处理
         @NotNull(message = "库存不能为空")
         Integer stock,
         Integer status,

@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 
 
 // 会话跟踪 session cookie token
+// 实际上，controller使用DTO，不会被修改的，适合record类；但模型层不该使用record类，但已经写到这了，积重难返，不管了
 
 @With
 @TableName(value = "user")

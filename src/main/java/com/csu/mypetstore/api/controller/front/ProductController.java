@@ -37,7 +37,6 @@ public class ProductController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "2") int size
     ) {
-        // TODO: 完成逻辑
         return productService.getProductList(cid, keyword, order, asc, page, size);
     }
 }
