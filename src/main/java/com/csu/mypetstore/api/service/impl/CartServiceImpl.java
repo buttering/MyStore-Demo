@@ -47,13 +47,13 @@ public class CartServiceImpl implements CartService {
 
         if (cartItem == null) {
             // 不包含，新增项
-            cartItem = new CartItem(null, userId, productId, quantity, CONSTANT.CART_ITEM_STATUS.CHECKED, LocalDateTime.now(), LocalDateTime.now());
+            cartItem = new CartItem(null, userId, productId, quantity, true, LocalDateTime.now(), LocalDateTime.now());
             cartItemMapper.insert(cartItem);  // 错误放到全局异常处理
         } else {
             // 包含，修改项
             UpdateWrapper<CartItem> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("id", cartItem.getId())
-                    .set("quantity", quantity)
+                    .set("quantity", quantity + cartItem.getQuantity())
                     .set("update_time", LocalDateTime.now());
             cartItemMapper.update(null, updateWrapper);
         }
@@ -72,7 +72,7 @@ public class CartServiceImpl implements CartService {
         AtomicBoolean allSelected = new AtomicBoolean(true);
 
         if (CollectionUtils.isNotEmpty(cartItemList)) {
-            // TODO: 匿名函数返回或，cartItemVO属性被置为null
+            // 因为structMapper并不是对对象的属性直接修改，而是构造了一个新的对象。因此需要使用BiFunction类型的函数式接口
             cartItemVOList = ListBeanUtils.copyListProperties(
                     cartItemList,
                     CartItemVO::new,
@@ -97,14 +97,13 @@ public class CartServiceImpl implements CartService {
                             cartItemVO.setImageList(productService.getImageToken(product.id(), true));
                             cartItemVO.setProductTotalPrice(BigDecimalUtils.multiply(cartItemVO.getQuantity(), cartItemVO.getProductPrice().doubleValue()));
 
-                            // 计算总价
-                            if (cartItem.getStatus() == CONSTANT.CART_ITEM_STATUS.CHECKED)
+                            // 计算总价，仅统计勾选的
+                            if (cartItem.getSelected())
                                 cartTotalPrice.set(BigDecimalUtils.add(cartTotalPrice.get().doubleValue(), cartItemVO.getProductTotalPrice().doubleValue()));
                             else
                                 allSelected.set(false);
-
-                            cartItemVO.setCheckStock(20);
                         }
+                        return cartItemVO;
                     }
             );
         }

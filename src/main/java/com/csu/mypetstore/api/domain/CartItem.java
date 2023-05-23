@@ -28,7 +28,7 @@ public class CartItem {
         @NotBlank(message = "数量不能为空")
         private Integer quantity;
         @NotBlank(message = "状态不能为空")
-        private int status;
+        private Boolean selected;
         @TableField(value = "create_time")
         @JsonSerialize(using = LocalDateTimeSerializer.class)
         private LocalDateTime createTime;

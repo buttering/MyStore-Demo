@@ -814,17 +814,15 @@ id 和 keyword 至少有一个非空。
 }
 ```
 
-imageList仅返回主图信息
-
 data字段信息见下表
 
-| 参数    | 类型    | 描述                              |
-| ------- | ------- | --------------------------------- |
-| total   | Integer | 查找到的商品数量，为0表示没有商品 |
-| records | List    | 各商品信息                        |
-| size    | Integer | 当前页大小                        |
-| current | Integer | 当前页                            |
-| pages   | Integer | 总页数                            |
+| 参数    | 类型    | 描述                                |
+| ------- | ------- | ----------------------------------- |
+| total   | Integer | 查找到的商品数量，为0表示没有商品   |
+| records | List    | 各商品信息，imageList仅返回主图信息 |
+| size    | Integer | 当前页大小                          |
+| current | Integer | 当前页                              |
+| pages   | Integer | 总页数                              |
 
 
 
@@ -1201,9 +1199,64 @@ POST
 ```json
 {
     "code": 0,
-    "message": "SUCCESS"
+    "message": "SUCCESS",
+    "data": {
+        "cartTotalPrice": 36600.0,
+        "allSelected": true,
+        "cartItemList": [
+            {
+                "id": 6,
+                "uid": 22,
+                "productId": 2,
+                "quantity": 75,
+                "selected": true,
+                "productName": "Gao Anqi",
+                "productSubtitle": "Prof.",
+                "productPrice": 488,
+                "productStock": 75,
+                "imageList": [
+                    {
+                        "image": {
+                            "id": "2ca01b95de54ba11eb44becbc6c4cd69",
+                            "pid": 2,
+                            "type": 1,
+                            "alt": "picture4",
+                            "createTime": "2023-05-16T17:16:09+08:00"
+                        },
+                        "token": {
+                            "tmpSecretId": "",
+                            "tmpSecretKey": "",
+                            "sessionToken": ""
+                        }
+                    }
+                ],
+                "productTotalPrice": 36600.00,
+                "checkStock": 0
+            }
+        ]
+    }
 }
 ```
+
+data字段信息见下表
+
+| 参数              | 类型     | 描述                                                         |
+| ----------------- | -------- | ------------------------------------------------------------ |
+| cartTotalPrice    | Double   | 购物车商品总价，仅计算选中的商品                             |
+| allSelected       | Boolean  | 所有商品是否均被选中                                         |
+| cartItemList      | List     | 购物车商品项                                                 |
+| id                | Integer  | 购物车项id                                                   |
+| uid               | Interger | 用户id                                                       |
+| productId         | Integer  | 商品id                                                       |
+| quantity          | Integer  | 购物车中商品数量                                             |
+| selected          | Boolean  | 商品是否被选中                                               |
+| productName       | String   | 商品名称                                                     |
+| productSubtitle   | String   | 商品子标题                                                   |
+| productPrice      | Double   | 商品价格                                                     |
+| productStock      | Integer  | 商品库存                                                     |
+| imageList         | List     | 商品图片及其token，仅返回主图信息                            |
+| productTotalPrice | Double   | 购物车项的总价                                               |
+| checkStock        | Integer  | 购物车项是否库存，在向购物车添加商品导致购物车项高于商品库存时，购物车项会被强制修改为商品库存数量。该字段表明是否强制修改<br />1： *STOCK_SUFFICIENT* 库存充足，没有修改；0： *STOCK_INSUFFICIENT* 库存不足，需要修改 |
 
 ## 2. 删除商品
 

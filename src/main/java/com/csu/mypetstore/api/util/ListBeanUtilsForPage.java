@@ -7,13 +7,13 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public class ListBeanUtilsForPage {
-    public static <S, T> Page<T> copyPageProperties(Page<S> sourcePage, Supplier<T> targetSupplier, BiConsumer<S, T> callback) {
+    public static <S, T> Page<T> copyPageProperties(Page<S> sourcePage, Supplier<T> targetConstructor, BiConsumer<S, T> callback) {
         Page<T> page = new Page<>();
         page.setTotal(sourcePage.getTotal());
         page.setSize(sourcePage.getSize());
         page.setCurrent(sourcePage.getCurrent());
         List<S> sourceList = sourcePage.getRecords();
-        List<T> targetList = ListBeanUtils.copyListProperties(sourceList, targetSupplier, callback);
+        List<T> targetList = ListBeanUtils.copyListProperties(sourceList, targetConstructor, callback);
 
         page.setRecords(targetList);
         return page;

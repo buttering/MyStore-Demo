@@ -27,7 +27,6 @@ public class CategoryServiceImpl implements CategoryService {
         this.categoryMapper = categoryMapper;
     }
 
-
     @Override
     public CommonResponse<CategoryVO> getCategoryById(Integer categoryId) {
         if (categoryId == null)
@@ -57,8 +56,6 @@ public class CategoryServiceImpl implements CategoryService {
 
         return CommonResponse.createResponseForSuccess(categoryVOList);
     }
-
-
 
     @Override
     public List<Category> getALLChildCategoryList(Integer categoryId) {

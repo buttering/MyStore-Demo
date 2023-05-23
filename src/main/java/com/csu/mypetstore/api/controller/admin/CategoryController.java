@@ -21,7 +21,6 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    // TODO: 完成获取类别的接口
     @GetMapping("admin/categories/{id}")
     public CommonResponse<CategoryVO> getCategoryById (@PathVariable(value = "id") Integer categoryId, HttpSession session) {
         UserInfoVO userInfoVO = (UserInfoVO) session.getAttribute(CONSTANT.LOGIN_USER);

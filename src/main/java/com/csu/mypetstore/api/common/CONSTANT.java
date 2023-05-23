@@ -56,11 +56,6 @@ public final class CONSTANT {
         ORDER_BY_FIELD_LIST.add("stock");
     }
 
-    public interface CART_ITEM_STATUS {
-        int CHECKED = 1;
-        int UNCHECKED = 0;
-    }
-
     public interface CART_ITEM_CHECK_STOCK {
         int STOCK_SUFFICIENT = 1;
         int STOCK_INSUFFICIENT = 0;

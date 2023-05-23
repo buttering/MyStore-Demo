@@ -1,11 +1,9 @@
 package com.csu.mypetstore.api.domain.structMapper;
 
 import com.csu.mypetstore.api.domain.Product;
-import com.csu.mypetstore.api.domain.ProductImage;
 import com.csu.mypetstore.api.domain.vo.CartItemVO;
 import com.csu.mypetstore.api.domain.vo.ProductDetailVO;
 import com.csu.mypetstore.api.domain.vo.ProductListVO;
-import com.csu.mypetstore.api.domain.vo.TencentCOSVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -39,6 +37,6 @@ public interface ProductStructMapper {
     @Mapping(source = "product.price", target = "productPrice")
     @Mapping(source = "product.stock", target = "productStock")
     @Mapping(source = "cartItemVO.id", target = "id")
-    @Mapping(source = "cartItemVO.status", target = "status")
+    @Mapping(source = "cartItemVO.selected", target = "selected")
     CartItemVO product2CartItemVO(CartItemVO cartItemVO, Product product);
 }

@@ -12,7 +12,7 @@ public class CartItemVO {
     private Integer uid;
     private Integer productId;
     private Integer quantity;
-    private int status;
+    private Boolean selected;
 
     private String productName;
     private String productSubtitle;
