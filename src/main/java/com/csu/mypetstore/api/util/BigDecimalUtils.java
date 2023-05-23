@@ -1,6 +1,7 @@
 package com.csu.mypetstore.api.util;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class BigDecimalUtils {
     /**
@@ -10,10 +11,10 @@ public class BigDecimalUtils {
      * @param v2
      * @return double
      */
-    public static Double add(double v1, double v2) {
+    public static BigDecimal add(double v1, double v2) {
         BigDecimal n1 = new BigDecimal(Double.toString(v1));
         BigDecimal n2 = new BigDecimal(Double.toString(v2));
-        return n1.add(n2).doubleValue();
+        return n1.add(n2);
     }
 
     /**
@@ -23,10 +24,10 @@ public class BigDecimalUtils {
      * @param v2
      * @return double
      */
-    public static Double subtract(double v1, double v2) {
+    public static BigDecimal subtract(double v1, double v2) {
         BigDecimal n1 = new BigDecimal(Double.toString(v1));
         BigDecimal n2 = new BigDecimal(Double.toString(v2));
-        return n1.subtract(n2).doubleValue();
+        return n1.subtract(n2);
     }
 
     /**
@@ -36,10 +37,10 @@ public class BigDecimalUtils {
      * @param v2
      * @return double
      */
-    public static Double multiply(double v1, double v2) {
+    public static BigDecimal multiply(double v1, double v2) {
         BigDecimal n1 = new BigDecimal(Double.toString(v1));
         BigDecimal n2 = new BigDecimal(Double.toString(v2));
-        return n1.multiply(n2).doubleValue();
+        return n1.multiply(n2);
     }
 
     /**
@@ -49,10 +50,10 @@ public class BigDecimalUtils {
      * @param v2
      * @return double
      */
-    public static Double divide(double v1, double v2) {
+    public static BigDecimal divide(double v1, double v2) {
         BigDecimal n1 = new BigDecimal(Double.toString(v1));
         BigDecimal n2 = new BigDecimal(Double.toString(v2));
-        return n1.divide(n2, 10, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return n1.divide(n2, 10, RoundingMode.HALF_UP);
     }
 
 }

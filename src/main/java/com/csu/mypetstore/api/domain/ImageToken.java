@@ -6,7 +6,6 @@ import com.csu.mypetstore.api.domain.vo.TencentCOSVO;
 import java.time.LocalDateTime;
 
 public record ImageToken (
-        // TODO,存于缓存中
         String pictureId,
         TencentCOSVO token,
         CONSTANT.IMAGE_PERMISSION permission,  // 权限

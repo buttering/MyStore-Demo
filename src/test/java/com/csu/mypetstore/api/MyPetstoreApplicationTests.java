@@ -14,6 +14,7 @@ import com.csu.mypetstore.api.domain.vo.TencentCOSVO;
 import com.csu.mypetstore.api.persistence.*;
 
 import com.csu.mypetstore.api.service.COSService;
+import com.csu.mypetstore.api.service.CartService;
 import com.csu.mypetstore.api.service.CategoryService;
 import com.csu.mypetstore.api.service.impl.ProductServiceImpl;
 import com.github.benmanes.caffeine.cache.Cache;
@@ -61,6 +62,8 @@ class MyPetstoreApplicationTests {
     Cache<String, String> localCache;
     @Autowired
     Cache<String, ImageToken> imageTokenCache;
+    @Autowired
+    CartService cartService;
 
     @Value("${tencent-cloud.cos.bucket}")
     String bucket;
@@ -162,7 +165,7 @@ class MyPetstoreApplicationTests {
 
     @Test
     void testChildrenCategory() {
-        List<Category> categoryList = categoryService.getCategoryList(4).getData();
+        List<Category> categoryList = categoryService.getALLChildCategoryList(4);
         System.out.println(categoryList);
     }
 
@@ -185,7 +188,7 @@ class MyPetstoreApplicationTests {
 
     @Test
     void testCache() {
-        ImageToken imageToken = new ImageToken("1", new TencentCOSVO("A", "a", "1"), "a");
+        ImageToken imageToken = new ImageToken("1", new TencentCOSVO("A", "a", "1"), CONSTANT.IMAGE_PERMISSION.GET_OBJECT, LocalDateTime.now());
         localCache.put("aaa", "aaa");
         localCache.put("aaa", "bbb");
         imageTokenCache.put("aaa", imageToken);
@@ -193,4 +196,5 @@ class MyPetstoreApplicationTests {
         System.out.println(localCache.getIfPresent("aaa"));
         System.out.println(imageTokenCache.getIfPresent("aaa"));
     }
+
 }

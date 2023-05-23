@@ -21,7 +21,6 @@ import com.csu.mypetstore.api.service.CategoryService;
 import com.csu.mypetstore.api.service.ProductService;
 import com.csu.mypetstore.api.util.ListBeanUtilsForPage;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -52,22 +51,24 @@ public class ProductServiceImpl implements ProductService {
 
         Category category = categoryMapper.selectById(product.categoryId());
 //        List<ProductImage> productImageList = productImageMapper.selectList(Wrappers.<ProductImage>query().eq("pid", pid));
-        ProductDetailVO productDetailVO = ProductStructMapper.INSTANCE.product2DetailVO(product, getImageToken(pid), category.parentId());
+        ProductDetailVO productDetailVO = ProductStructMapper.INSTANCE.product2DetailVO(product, getImageToken(pid, false), category.parentId());
 
         return CommonResponse.createResponseForSuccess(productDetailVO);
     }
 
     @Override
-    public List<Map<String, Object>> getImageToken(Integer pid) {
-        return getImageToken(pid, true);
+    public List<Map<String, Object>> getImageToken(Integer pid, boolean onlyMainImage) {
+        return getImageToken(pid, onlyMainImage, true);
     }
 
     @Override
-    public List<Map<String, Object>> getImageToken(Integer pid, boolean withToken) {
+    public List<Map<String, Object>> getImageToken(Integer pid, boolean onlyMainImage, boolean withToken) {
         List<ProductImage> productImageList = productImageMapper.selectList(Wrappers.<ProductImage>query().eq("pid", pid));
         List<Map<String, Object>> mapList = new ArrayList<>();
         for (ProductImage productImage: productImageList) {
             String imageId = productImage.getId();
+            if (onlyMainImage && productImage.getType() != CONSTANT.ProductImageType.MAIN_IMAGE)
+                break;  // 若只要求主图
             TencentCOSVO token = null;
             if (withToken)
                 token = (TencentCOSVO) cosService.generatePolicy(imageId, CONSTANT.IMAGE_PERMISSION.GET_OBJECT).getData();
@@ -86,7 +87,7 @@ public class ProductServiceImpl implements ProductService {
 
         List<Category> categoryList = new ArrayList<>();
         List<Integer> categoryIdList = new ArrayList<>();
-        if (cid != null) categoryList = categoryService.getChildCategoryList(cid).getData();
+        if (cid != null) categoryList = categoryService.getALLChildCategoryList(cid);
         categoryList.forEach(category -> categoryIdList.add(category.id()));
 
         if (StringUtils.isBlank(keyword) && categoryIdList.isEmpty())
@@ -120,8 +121,7 @@ public class ProductServiceImpl implements ProductService {
                 result,
                 ProductListVO::new,  // 大坑！final字段的属性不能被重复赋值，因此不能有无参构造器。故不能给属性加final关键字，也不能使用record类型。
                 (product, productListVO) -> {
-                    // TODO:仅需返回主图
-                    productListVO.setImageList(getImageToken(product.id()));
+                    productListVO.setImageList(getImageToken(product.id(), true));
                 }
         );
         return CommonResponse.createResponseForSuccess(voResult);

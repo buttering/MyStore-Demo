@@ -7,28 +7,32 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.csu.mypetstore.api.util.LocalDateTimeSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
+// TODO 使用缓存，减少数据库写入
 @TableName(value = "cartitem")
-public record CartItem(
+@Data
+@AllArgsConstructor
+public class CartItem {
         @TableId(type = IdType.AUTO)
-        Integer id,
+        private Integer id;
         @NotBlank(message = "用户id不能为空")
-        Integer uid,
+        private Integer uid;
         @TableField(value = "product_id")
         @NotBlank(message = "产品id不能为空")
-        Integer productId,
+        private Integer productId;
 
         @NotBlank(message = "数量不能为空")
-        Integer quantity,
-        @NotBlank(message = "点击状态不能为空")
-        Boolean checked,  // TODO 使用缓存，减少数据库写入
-
+        private Integer quantity;
+        @NotBlank(message = "状态不能为空")
+        private int status;
         @TableField(value = "create_time")
         @JsonSerialize(using = LocalDateTimeSerializer.class)
-        LocalDateTime createTime,
+        private LocalDateTime createTime;
         @TableField(value = "update_time")
         @JsonSerialize(using = LocalDateTimeSerializer.class)
-        LocalDateTime updateTime
-) { }
+        private LocalDateTime updateTime;
+}

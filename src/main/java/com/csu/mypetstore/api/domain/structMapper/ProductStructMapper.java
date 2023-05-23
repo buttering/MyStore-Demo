@@ -39,5 +39,6 @@ public interface ProductStructMapper {
     @Mapping(source = "product.price", target = "productPrice")
     @Mapping(source = "product.stock", target = "productStock")
     @Mapping(source = "cartItemVO.id", target = "id")
+    @Mapping(source = "cartItemVO.status", target = "status")
     CartItemVO product2CartItemVO(CartItemVO cartItemVO, Product product);
 }

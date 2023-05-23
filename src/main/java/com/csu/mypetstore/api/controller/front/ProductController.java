@@ -35,7 +35,7 @@ public class ProductController {
             @RequestParam(defaultValue = "") String order,
             @RequestParam(defaultValue = "false") Boolean asc,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "2") int size
+            @RequestParam(defaultValue = "10") int size
     ) {
         return productService.getProductList(cid, keyword, order, asc, page, size);
     }

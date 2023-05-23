@@ -1,5 +1,6 @@
 package com.csu.mypetstore.api.util;
 
+import com.csu.mypetstore.api.domain.vo.CartItemVO;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;

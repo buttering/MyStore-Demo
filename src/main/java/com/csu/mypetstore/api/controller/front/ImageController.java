@@ -20,7 +20,6 @@ public class ImageController {
 
     @GetMapping("api/image/{id}")
     CommonResponse<?> getImageToken(@PathVariable @NotNull String id) {
-        // TODO: 流量管理，使用redis暂存特定粒度的token
         return cosService.generatePolicy(id, CONSTANT.IMAGE_PERMISSION.GET_OBJECT);
     }
 }

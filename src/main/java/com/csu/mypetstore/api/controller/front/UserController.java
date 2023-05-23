@@ -91,7 +91,6 @@ public class UserController {
         UserInfoVO user = (UserInfoVO) session.getAttribute(CONSTANT.LOGIN_USER);
         if (user == null)
             return CommonResponse.createResponseForError(ResponseCode.NEED_LOGIN.getDescription(), ResponseCode.NEED_LOGIN.getCode());
-        // TODO：使用UserVO进行返回
         return CommonResponse.createResponseForSuccess(user);
     }
 

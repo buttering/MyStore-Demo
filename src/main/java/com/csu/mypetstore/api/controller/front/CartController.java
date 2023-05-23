@@ -10,6 +10,7 @@ import com.csu.mypetstore.api.domain.vo.UserInfoVO;
 import com.csu.mypetstore.api.service.CartService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +22,7 @@ public class CartController {
         this.cartItemService = cartItemService;
     }
 
+    @PostMapping("api/cartitem")
     public CommonResponse<CartVO> addCartItem(@Valid @RequestBody PostCartItemDTO cartItem, HttpSession session) {
         UserInfoVO loginUser = (UserInfoVO) session.getAttribute(CONSTANT.LOGIN_USER);
         if (loginUser == null)

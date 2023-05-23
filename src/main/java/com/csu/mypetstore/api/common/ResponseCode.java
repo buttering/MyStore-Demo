@@ -7,7 +7,8 @@ public enum ResponseCode {
     SUCCESS(0, "SUCCESS"),
     ERROR(1, "ERROR"),
     ARGUMENT_ILLEGAL(100, "ARGUMENT ILLEGAL"),
-    NEED_LOGIN(11, "NEED_LOGIN");
+    NEED_LOGIN(11, "NEED_LOGIN"),
+    EMPTY_OBJECT(12, "EMPTY OBJECT");
 
 
     private final int code;

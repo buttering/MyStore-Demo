@@ -13,8 +13,8 @@ public interface ProductService {
 
     CommonResponse<Page<ProductListVO>> getProductList(Integer cid, String keyword, String orderBy, Boolean asc, int pageNum, int pageSize);
 
-    public List<Map<String, Object>> getImageToken(Integer pid, boolean withToken);
+    List<Map<String, Object>> getImageToken(Integer pid, boolean onlyMainImage, boolean withToken);
 
-    public List<Map<String, Object>> getImageToken(Integer pid);
+    List<Map<String, Object>> getImageToken(Integer pid, boolean onlyMainImage);
 
 }

@@ -1,14 +1,8 @@
 package com.csu.mypetstore.api.domain.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.csu.mypetstore.api.util.LocalDateTimeSerializer;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -18,14 +12,14 @@ public class CartItemVO {
     private Integer uid;
     private Integer productId;
     private Integer quantity;
-    private Boolean checked;
+    private int status;
 
     private String productName;
     private String productSubtitle;
-    private String productPrice;
-    private String productStock;
+    private BigDecimal productPrice;
+    private Integer productStock;
 
     private List<Map<String, Object>> imageList;
-
-    private String productTotalPrice;
+    private BigDecimal productTotalPrice;
+    private int checkStock;  // 购物车内数量是否超过了商品库存
 }

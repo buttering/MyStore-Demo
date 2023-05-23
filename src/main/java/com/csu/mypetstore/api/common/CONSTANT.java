@@ -16,6 +16,7 @@ public final class CONSTANT {
     }
 
     public static final String LOGIN_USER = "loginUser";
+    public static final int CATEGORY_ROOT = 0;
 
     public static final HashMap<String, String> REGISTER_FIELD_MAP = new HashMap<>();
     static {
@@ -58,6 +59,11 @@ public final class CONSTANT {
     public interface CART_ITEM_STATUS {
         int CHECKED = 1;
         int UNCHECKED = 0;
+    }
+
+    public interface CART_ITEM_CHECK_STOCK {
+        int STOCK_SUFFICIENT = 1;
+        int STOCK_INSUFFICIENT = 0;
     }
 
     @Getter

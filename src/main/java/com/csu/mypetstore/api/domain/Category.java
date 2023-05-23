@@ -6,9 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.csu.mypetstore.api.util.LocalDateTimeSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public record Category(
         @TableId(type = IdType.AUTO)
@@ -19,7 +19,7 @@ public record Category(
         @NotBlank(message = "商品类别名不能为空")
         String name,
         Integer status,
-        String sortOrder,
+        Integer sortOrder,
 
         @TableField(value = "create_time")
         @NotBlank(message = "创建时间不能为空")
@@ -30,15 +30,18 @@ public record Category(
         @JsonSerialize(using = LocalDateTimeSerializer.class)
         LocalDateTime updateTime
 ) {
-    @Override
-    public boolean equals(Object obj) {
-        return true;
-        // TODO: 比较id
-    }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Category category = (Category) o;
+        return id.equals(category.id);
+    }
+
+    // 如果对象的equals方法被重写，那么对象的HashCode方法也尽量重写
+    @Override
     public int hashCode() {
-        return 0;
-        // TODO:  比较id
+        return Objects.hash(id);
     }
 }
