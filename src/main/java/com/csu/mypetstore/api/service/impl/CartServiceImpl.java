@@ -17,6 +17,7 @@ import com.csu.mypetstore.api.service.ProductService;
 import com.csu.mypetstore.api.util.BigDecimalUtils;
 import com.csu.mypetstore.api.util.ListBeanUtils;
 import com.google.common.collect.Lists;
+import org.apache.commons.collections4.ListUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -39,9 +40,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CommonResponse<CartVO> addCartItem(Integer userId, Integer productId, Integer quantity) {
-        Product product = productMapper.selectById(productId);
-        if (product == null || product.status() != CONSTANT.ProductStatus.ON_SALE.getCode())
-            return CommonResponse.createResponseForError("商品不存在或已下架");
+        if (!isProductAvailable(productId)) return CommonResponse.createResponseForError("商品不存在或已下架");
 
         CartItem cartItem = cartItemMapper.selectOne(Wrappers.<CartItem>query().eq("uid", userId).eq("product_id", productId));
 
@@ -61,6 +60,60 @@ public class CartServiceImpl implements CartService {
         return CommonResponse.createResponseForSuccess(getCartVOAndCheckStock(userId));
     }
 
+    @Override
+    public CommonResponse<CartVO> updateCartItem(Integer userId, Integer productId, Integer quantity, Boolean selected) {
+        if (!isProductAvailable(productId)) return CommonResponse.createResponseForError("商品不存在或已下架");
+
+        CartItem cartItem = cartItemMapper.selectOne(Wrappers.<CartItem>query().eq("uid", userId).eq("product_id", productId));
+        if (cartItem == null) {
+            return CommonResponse.createResponseForError("购物车中不存在该商品");
+        }
+
+        // 控制器层已经完成参数校验
+        if (quantity != null)
+            cartItem.setQuantity(quantity);
+        if (quantity != null)
+            cartItem.setSelected(selected);
+        cartItemMapper.updateById(cartItem);
+
+        return CommonResponse.createResponseForSuccess(getCartVOAndCheckStock(userId));
+    }
+
+    @Override
+    public CommonResponse<CartVO> getCart(Integer userId) {
+        return CommonResponse.createResponseForSuccess(getCartVOAndCheckStock(userId));
+    }
+
+    @Override
+    public CommonResponse<CartVO> deleteCartItem(Integer userId, Integer productId) {
+        if (!isProductAvailable(productId)) return CommonResponse.createResponseForError("商品不存在或已下架");
+
+        CartItem cartItem = cartItemMapper.selectOne(Wrappers.<CartItem>query().eq("uid", userId).eq("product_id", productId));
+        if (cartItem != null)
+            cartItemMapper.deleteById(cartItem);
+
+        return CommonResponse.createResponseForSuccess(getCartVOAndCheckStock(userId));
+    }
+
+    @Override
+    public CommonResponse<CartVO> updateCartSelect(Integer userId, Boolean allSelected) {
+        List<CartItem> cartItemList = cartItemMapper.selectList(Wrappers.<CartItem>query().eq("uid", userId));
+
+        cartItemList.forEach(cartItem -> {
+            cartItem.setSelected(allSelected);
+            cartItemMapper.updateById(cartItem);
+        });
+
+        return CommonResponse.createResponseForSuccess(getCartVOAndCheckStock(userId));
+    }
+
+    @Override
+    public CommonResponse<Integer> getCartItemNum(Integer userId) {
+        List<CartItem> cartItemList = cartItemMapper.selectList(Wrappers.<CartItem>query().eq("uid", userId));
+
+        return CommonResponse.createResponseForSuccess(cartItemList.size());
+    }
+
     private CartVO getCartVOAndCheckStock(Integer userId) {
         List<CartItem> cartItemList = cartItemMapper.selectList(Wrappers.<CartItem>query().eq("uid", userId));
         List<CartItemVO> cartItemVOList = Lists.newArrayList();
@@ -72,7 +125,7 @@ public class CartServiceImpl implements CartService {
         AtomicBoolean allSelected = new AtomicBoolean(true);
 
         if (CollectionUtils.isNotEmpty(cartItemList)) {
-            // 因为structMapper并不是对对象的属性直接修改，而是构造了一个新的对象。因此需要使用BiFunction类型的函数式接口
+            // 因为structMapper并不是对对象的属性直接重新赋值，而是构造了一个新的对象。因此需要使用BiFunction类型的函数式接口
             cartItemVOList = ListBeanUtils.copyListProperties(
                     cartItemList,
                     CartItemVO::new,
@@ -103,29 +156,16 @@ public class CartServiceImpl implements CartService {
                             else
                                 allSelected.set(false);
                         }
-                        return cartItemVO;
+                        return cartItemVO; // 返回新构造的对象
                     }
             );
         }
         return new CartVO(cartItemVOList, cartTotalPrice.get(), allSelected.get());
-
-//        return null;
     }
 
-    @Override
-    public CommonResponse<CartVO> updateCart(Integer userId, Integer productId, Integer quantity) {
-        return null;
+    private boolean isProductAvailable(Integer productId) {
+        Product product = productMapper.selectById(productId);
+        return product != null && product.status() == CONSTANT.ProductStatus.ON_SALE.getCode();
     }
-
-    @Override
-    public CommonResponse<CartVO> getCart(Integer userId) {
-        return null;
-    }
-
-    @Override
-    public CommonResponse<CartVO> deleteCart(Integer userId, Integer productId, Integer quantity) {
-        return null;
-    }
-
 
 }
