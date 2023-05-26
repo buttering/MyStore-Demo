@@ -69,4 +69,31 @@ public final class CONSTANT {
         private final String permission;
 
     }
+
+    @Getter
+    @AllArgsConstructor
+    public enum OrderStatus {
+
+        CANCEL(1, "已取消"),
+        UNPAID(2, "未付款"),
+        PAID(3, "已付款"),
+        SHIPPED(4, "已发货"),
+        SUCCESS(5, "交易成功"),
+        CLOSED(6, "订单关闭");
+
+        private final int code;
+        private final String description;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum PayType {
+
+        ALIPAY(1, "支付宝"),
+        WECHAT(2, "微信支付"),
+        OTHER(3, "其他类型");
+
+        private final int code;
+        private final String description;
+    }
 }

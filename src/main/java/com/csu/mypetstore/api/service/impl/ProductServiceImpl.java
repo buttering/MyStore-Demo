@@ -46,10 +46,10 @@ public class ProductServiceImpl implements ProductService {
     public CommonResponse<ProductDetailVO> getProductDetail(Integer pid) {
         Product product = productMapper.selectById(pid);
 
-        if (product == null || product.status() != CONSTANT.ProductStatus.ON_SALE.getCode())
+        if (product == null || product.getStatus() != CONSTANT.ProductStatus.ON_SALE.getCode())
             return CommonResponse.createResponseForError("商品不存在或已下架");
 
-        Category category = categoryMapper.selectById(product.categoryId());
+        Category category = categoryMapper.selectById(product.getCategoryId());
 //        List<ProductImage> productImageList = productImageMapper.selectList(Wrappers.<ProductImage>query().eq("pid", pid));
         ProductDetailVO productDetailVO = ProductStructMapper.INSTANCE.product2DetailVO(product, getImageToken(pid, false), category.parentId());
 
@@ -121,7 +121,7 @@ public class ProductServiceImpl implements ProductService {
                 result,
                 ProductListVO::new,  // 大坑！final字段的属性不能被重复赋值，因此不能有无参构造器。故不能给属性加final关键字，也不能使用record类型。
                 (product, productListVO) -> {
-                    productListVO.setImageList(getImageToken(product.id(), true));
+                    productListVO.setImageList(getImageToken(product.getId(), true));
                 }
         );
         return CommonResponse.createResponseForSuccess(voResult);

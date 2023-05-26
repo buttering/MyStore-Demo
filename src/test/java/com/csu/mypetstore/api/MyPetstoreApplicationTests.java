@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.csu.mypetstore.api.common.CONSTANT;
 import com.csu.mypetstore.api.common.CommonResponse;
 import com.csu.mypetstore.api.domain.*;
+import com.csu.mypetstore.api.domain.dto.PostOrderDTO;
 import com.csu.mypetstore.api.domain.structMapper.ProductStructMapper;
 import com.csu.mypetstore.api.domain.structMapper.UserStructMapper;
 import com.csu.mypetstore.api.domain.dto.RegisterUserDTO;
@@ -16,14 +17,21 @@ import com.csu.mypetstore.api.persistence.*;
 import com.csu.mypetstore.api.service.COSService;
 import com.csu.mypetstore.api.service.CartService;
 import com.csu.mypetstore.api.service.CategoryService;
+import com.csu.mypetstore.api.service.OrderService;
 import com.csu.mypetstore.api.service.impl.ProductServiceImpl;
+import com.csu.mypetstore.api.util.ValidGroup;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.tencent.cloud.Response;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.validation.annotation.Validated;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -64,6 +72,8 @@ class MyPetstoreApplicationTests {
     Cache<String, ImageToken> imageTokenCache;
     @Autowired
     CartService cartService;
+    @Autowired
+    OrderService orderService;
 
     @Value("${tencent-cloud.cos.bucket}")
     String bucket;
@@ -197,4 +207,51 @@ class MyPetstoreApplicationTests {
         System.out.println(imageTokenCache.getIfPresent("aaa"));
     }
 
+    @Value("E:\\project\\myPetstore\\src\\main\\resources\\static\\AlipayRSAPrivateKey.txt")
+    String path;
+    @Test
+    void testFile() throws IOException {
+        String privateKey = Files.readString(Paths.get(path));
+        System.out.println(privateKey);
+    }
+
+    Integer validated(@Validated PostOrderDTO postOrderDTO) {
+        System.out.println(postOrderDTO);
+        return 1;
+    }
+
+    Integer validatedGroup(@Validated(ValidGroup.CreateOrderWithProductId.class) PostOrderDTO postOrderDTO) {
+        System.out.println(postOrderDTO);
+        return 2;
+    }
+    @Test
+    void testValid() {
+        PostOrderDTO postOrderDTO = new PostOrderDTO(1, 1 , 2);
+        validated(postOrderDTO);validatedGroup(postOrderDTO);
+
+        postOrderDTO = new PostOrderDTO(1, 1, 0);
+        validated(postOrderDTO);validatedGroup(postOrderDTO);
+
+        postOrderDTO  = new PostOrderDTO(1, null, null);
+        validated(postOrderDTO);validatedGroup(postOrderDTO);
+
+        postOrderDTO = new PostOrderDTO(null, null, null);
+        validated(postOrderDTO);validatedGroup(postOrderDTO);
+
+        orderService.createOrder(1,1,1,1);
+        orderService.createOrder(1,1,1,0);
+    }
+
+    @Test
+    void testLock() {
+        Product product = productMapper.selectById(10);
+        Product product1 = productMapper.selectById(10);
+        System.out.println(product);
+
+        product.setName("aaaaaa");
+        product1.setName("bbbbbb");
+
+        System.out.println(productMapper.updateById(product));
+        System.out.println(productMapper.updateById(product1));
+    }
 }

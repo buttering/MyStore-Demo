@@ -2,6 +2,7 @@ package com.csu.mypetstore.api.util;
 
 import com.csu.mypetstore.api.common.CommonResponse;
 import com.csu.mypetstore.api.common.ResponseCode;
+import com.csu.mypetstore.api.exception.InsertException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.time.LocalDateTime;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
@@ -92,6 +94,13 @@ public class GlobalExceptionHandler {
     public CommonResponse<String> httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e){
         log.error(e.getMessage());
         return CommonResponse.createResponseForError("HTTP请求方法错误");
+    }
+
+    @ExceptionHandler(InsertException.class)
+    @ResponseBody
+    public CommonResponse<String> insertExceptionHandler(InsertException e) {
+        log.error("生成{}失败, {}", e.getMessage(), LocalDateTime.now()) ;
+        return CommonResponse.createResponseForError(String.format("生成%s失败", e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)

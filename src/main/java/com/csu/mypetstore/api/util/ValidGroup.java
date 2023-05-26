@@ -5,4 +5,6 @@ public class ValidGroup {
     public interface UpdateCartItem{}
 
     public interface AddCartItem{}
+
+    public interface CreateOrderWithProductId{}
 }

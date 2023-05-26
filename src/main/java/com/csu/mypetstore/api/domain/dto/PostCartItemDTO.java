@@ -10,8 +10,10 @@ import org.hibernate.validator.constraints.Range;
 public record PostCartItemDTO(
         @NotNull(message = "产品id不能为空")
         Integer productId,
+
         @NotNull(groups = ValidGroup.AddCartItem.class)  // 分组校验
         @Range(min = 1, message = "商品数量不能小于1", groups = ValidGroup.AddCartItem.class)
         Integer quantity,
+
         Boolean selected
 ){ }

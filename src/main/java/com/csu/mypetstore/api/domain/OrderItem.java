@@ -1,48 +1,57 @@
 package com.csu.mypetstore.api.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.csu.mypetstore.api.util.LocalDateTimeSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+import lombok.With;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
+@Data
 @TableName(value = "orderitem")
-public record OrderItem(
+public class OrderItem {
         @TableId(type = IdType.AUTO)
-        Integer id,
-        @NotBlank(message = "用户id不能为空")
-        Integer uid,
+        private Integer id;
+        private @NotBlank(message = "用户id不能为空") Integer uid;
         @TableField(value = "order_no")
-        @NotBlank(message = "订单编号不能为空")
-        Long orderNo,
+        private @NotBlank(message = "订单编号不能为空") Long orderNo;
         @TableField(value = "product_id")
-        @NotBlank(message = "产品id不能为空")
-        Integer ProductId,
-
+        private @NotBlank(message = "产品id不能为空") Integer productId;
         @TableField(value = "product_name")
-        @NotBlank(message = "商品名不能为空")
-        String productName,
-        @TableField(value = "product_image")
-        String ProductImage,
-        @TableField(value = "current_price")
-        @NotBlank(message = "购买单价不能为空")
-        BigDecimal currentPrice,
-        @NotBlank(message = "购买数量不能为空")
-        Integer quantity,
-        @TableField(value = "total_price")
-        @NotBlank(message ="总价不能为空" )
-        BigDecimal totalPrice,
 
-        @TableField(value = "create_time")
+        private @NotBlank(message = "商品名不能为空") String productName;
+        @TableField(value = "product_subtitle")
+        private String productSubtitle;
+        @TableField(value = "current_price")
+        private @NotBlank(message = "购买单价不能为空") BigDecimal currentPrice;
+        private @NotBlank(message = "购买数量不能为空") Integer quantity;
+        @TableField(value = "total_price")
+        private @NotBlank(message = "总价不能为空") BigDecimal totalPrice;
+
+        @TableField(value = "create_time", fill = FieldFill.INSERT)
         @JsonSerialize(using = LocalDateTimeSerializer.class)
-        LocalDateTime createTime,
-        @TableField(value = "update_time")
+        private LocalDateTime createTime;
+        @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
         @JsonSerialize(using = LocalDateTimeSerializer.class)
-        LocalDateTime updateTime
-) { }
+        private LocalDateTime updateTime;
+
+        @Override
+        public String toString() {
+                return "OrderItem[" +
+                        "id=" + id + ", " +
+                        "uid=" + uid + ", " +
+                        "orderNo=" + orderNo + ", " +
+                        "productId=" + productId + ", " +
+                        "productName=" + productName + ", " +
+                        "productSubtitle=" + productSubtitle + ", " +
+                        "currentPrice=" + currentPrice + ", " +
+                        "quantity=" + quantity + ", " +
+                        "totalPrice=" + totalPrice + ", " +
+                        "createTime=" + createTime + ", " +
+                        "updateTime=" + updateTime + ']';
+        }
+}

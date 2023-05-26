@@ -1,9 +1,12 @@
 package com.csu.mypetstore.api.domain.structMapper;
 
+import com.csu.mypetstore.api.domain.Order;
+import com.csu.mypetstore.api.domain.OrderItem;
 import com.csu.mypetstore.api.domain.Product;
 import com.csu.mypetstore.api.domain.vo.CartItemVO;
 import com.csu.mypetstore.api.domain.vo.ProductDetailVO;
 import com.csu.mypetstore.api.domain.vo.ProductListVO;
+import com.csu.mypetstore.api.persistence.ProductMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -39,4 +42,11 @@ public interface ProductStructMapper {
     @Mapping(source = "cartItemVO.id", target = "id")
     @Mapping(source = "cartItemVO.selected", target = "selected")
     CartItemVO product2CartItemVO(CartItemVO cartItemVO, Product product);
+
+    @Mapping(source = "id", target = "productId")
+    @Mapping(source = "name", target = "productName")
+    @Mapping(source = "subtitle", target = "productSubtitle")
+    @Mapping(source = "price", target = "currentPrice")
+    @Mapping(target = "id", ignore = true)
+    OrderItem product2OrderItem(Product product);
 }

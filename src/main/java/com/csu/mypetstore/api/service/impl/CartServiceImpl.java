@@ -135,19 +135,19 @@ public class CartServiceImpl implements CartService {
                             cartItemVO = ProductStructMapper.INSTANCE.product2CartItemVO(cartItemVO, product);
 
                             // 判断库存
-                            if (product.stock() >= cartItem.getQuantity()) {
+                            if (product.getStock() >= cartItem.getQuantity()) {
                                 cartItemVO.setQuantity(cartItemVO.getQuantity());
                                 cartItemVO.setCheckStock(CONSTANT.CART_ITEM_CHECK_STOCK.STOCK_SUFFICIENT);
                             } else {  // 库存不足时，修改购物车及数据库并设置标志
                                 UpdateWrapper<CartItem> updateWrapper = new UpdateWrapper<>();
                                 updateWrapper.eq("id", cartItem.getId())
-                                        .set("quantity", product.stock());
+                                        .set("quantity", product.getStock());
                                 cartItemMapper.update(null, updateWrapper);
-                                cartItemVO.setQuantity(product.stock());
+                                cartItemVO.setQuantity(product.getStock());
                                 cartItemVO.setCheckStock(CONSTANT.CART_ITEM_CHECK_STOCK.STOCK_INSUFFICIENT);
                             }
 
-                            cartItemVO.setImageList(productService.getImageToken(product.id(), true));
+                            cartItemVO.setImageList(productService.getImageToken(product.getId(), true));
                             cartItemVO.setProductTotalPrice(BigDecimalUtils.multiply(cartItemVO.getQuantity(), cartItemVO.getProductPrice().doubleValue()));
 
                             // 计算总价，仅统计勾选的
@@ -165,7 +165,7 @@ public class CartServiceImpl implements CartService {
 
     private boolean isProductAvailable(Integer productId) {
         Product product = productMapper.selectById(productId);
-        return product != null && product.status() == CONSTANT.ProductStatus.ON_SALE.getCode();
+        return product != null && product.getStatus() == CONSTANT.ProductStatus.ON_SALE.getCode();
     }
 
 }
