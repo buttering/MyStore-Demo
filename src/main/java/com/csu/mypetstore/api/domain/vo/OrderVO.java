@@ -1,6 +1,7 @@
 package com.csu.mypetstore.api.domain.vo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.csu.mypetstore.api.domain.CartItem;
 import com.csu.mypetstore.api.util.LocalDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

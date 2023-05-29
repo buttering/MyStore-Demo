@@ -2,6 +2,7 @@ package com.csu.mypetstore.api.util;
 
 import com.csu.mypetstore.api.common.CommonResponse;
 import com.csu.mypetstore.api.common.ResponseCode;
+import com.csu.mypetstore.api.exception.APIException;
 import com.csu.mypetstore.api.exception.InsertException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -100,7 +101,14 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public CommonResponse<String> insertExceptionHandler(InsertException e) {
         log.error("生成{}失败, {}", e.getMessage(), LocalDateTime.now()) ;
-        return CommonResponse.createResponseForError(String.format("生成%s失败", e.getMessage()));
+        return CommonResponse.createResponseForError(String.format("生成%s信息失败", e.getMessage()));
+    }
+
+    @ExceptionHandler(APIException.class)
+    @ResponseBody
+    public CommonResponse<String> apiExceptionHandler(APIException e) {
+        log.info(e.getMessage(), LocalDateTime.now());
+        return CommonResponse.createResponseForError(e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

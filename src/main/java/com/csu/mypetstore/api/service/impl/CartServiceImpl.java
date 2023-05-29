@@ -7,6 +7,7 @@ import com.csu.mypetstore.api.common.CONSTANT;
 import com.csu.mypetstore.api.common.CommonResponse;
 import com.csu.mypetstore.api.domain.CartItem;
 import com.csu.mypetstore.api.domain.Product;
+import com.csu.mypetstore.api.domain.structMapper.CartItemStructMapper;
 import com.csu.mypetstore.api.domain.structMapper.ProductStructMapper;
 import com.csu.mypetstore.api.domain.vo.CartItemVO;
 import com.csu.mypetstore.api.domain.vo.CartVO;
@@ -132,7 +133,7 @@ public class CartServiceImpl implements CartService {
                     (cartItem, cartItemVO) -> {
                         Product product = productMapper.selectById(cartItem.getProductId());
                         if (product != null) {
-                            cartItemVO = ProductStructMapper.INSTANCE.product2CartItemVO(cartItemVO, product);
+                            cartItemVO = CartItemStructMapper.INSTANCE.product2CartItemVO(cartItemVO, product);
 
                             // 判断库存
                             if (product.getStock() >= cartItem.getQuantity()) {

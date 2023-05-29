@@ -24,6 +24,7 @@ public class UserController {
     private final UserService userService;
 
     // 自动注入
+    // 当一个类只有一个有参构造器，且该构造器不一定需要是public修饰的， 组件注入的时候不需要指定在构造器方法上或者构造器参数上指定@Autowired，只需要声明构造器即可；
     public UserController(UserService userService) {
         this.userService = userService;
     }

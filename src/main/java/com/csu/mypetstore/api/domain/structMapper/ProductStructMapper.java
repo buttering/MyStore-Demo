@@ -35,18 +35,6 @@ public interface ProductStructMapper {
 
     ProductListVO product2ListVO(Product product);
 
-    @Mapping(source = "product.name", target = "productName")
-    @Mapping(source = "product.subtitle", target = "productSubtitle")
-    @Mapping(source = "product.price", target = "productPrice")
-    @Mapping(source = "product.stock", target = "productStock")
-    @Mapping(source = "cartItemVO.id", target = "id")
-    @Mapping(source = "cartItemVO.selected", target = "selected")
-    CartItemVO product2CartItemVO(CartItemVO cartItemVO, Product product);
 
-    @Mapping(source = "id", target = "productId")
-    @Mapping(source = "name", target = "productName")
-    @Mapping(source = "subtitle", target = "productSubtitle")
-    @Mapping(source = "price", target = "currentPrice")
-    @Mapping(target = "id", ignore = true)
-    OrderItem product2OrderItem(Product product);
+
 }

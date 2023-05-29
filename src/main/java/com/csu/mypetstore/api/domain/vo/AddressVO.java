@@ -1,5 +1,8 @@
 package com.csu.mypetstore.api.domain.vo;
 
+import lombok.Data;
+
+@Data
 public class AddressVO {
     private Integer id;
     private String addressName;

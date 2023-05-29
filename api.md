@@ -1501,10 +1501,16 @@ POST
 ### 请求体示例
 
 ```json
-
+{
+    "addressId": 1,
+    "productId": 10,
+    "quantity": 20
+}
 ```
 
 ### 应答示例
+
+success:
 
 ```json
 {
@@ -1523,7 +1529,17 @@ POST
         "closeTime": null,
         "createTime": "2023-05-26T15:05:49+08:00",
         "updateTime": "2023-05-26T15:05:49+08:00",
-        "address": null,
+        "address": {
+            "id": 1,
+            "addressName": "Hung Ka Keung",
+            "phone": "11-877-0449",
+            "mobile": "WVECBKJkCk",
+            "province": "i5lABHlHDk",
+            "city": "Chengdu",
+            "district": "XqgAEkv30H",
+            "detail": "8AfqR7lLoI",
+            "zip": "WYSUS9AUKP"
+        },
         "orderItemList": [
             {
                 "id": 10,
@@ -1538,6 +1554,25 @@ POST
     }
 }
 ```
+
+data部分属性如下
+
+| 参数         | 类型     | 描述                                                         |
+| ------------ | -------- | ------------------------------------------------------------ |
+| paymentPrice | Integer  | 订单总价，不包括邮费                                         |
+| postage      | Integer  | 邮费                                                         |
+| status       | 订单状态 | 1：已取消，2：未付款，3：已付款，4：已发货，5：交易成功，6：订单关闭 |
+
+error:
+
+```json
+{
+    "code": 1,
+    "message": "商品(GAO ANQI)库存不足"
+}
+```
+
+
 
 ## 2. 从购物车生成订单
 
@@ -1573,19 +1608,14 @@ POST
 ### 请求体示例
 
 ```json
-
+{
+	"addressId": 1
+}
 ```
 
 ### 应答示例
 
-```json
-{
-    "code": 0,
-    "message": "SUCCESS"
-}
-```
-
-
+见普通订单接口。
 
 ## 3. 取消订单
 

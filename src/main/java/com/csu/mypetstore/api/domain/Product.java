@@ -35,9 +35,22 @@ public class Product {
         private LocalDateTime createTime;
         @TableField(value = "update_time")
         @JsonSerialize(using = LocalDateTimeSerializer.class)
-        @Version  // 乐观锁，仅在insert时手动设值，update时会自动更新
+//        @Version  // 乐观锁，仅在insert时手动设值，update时会自动更新
         private LocalDateTime updateTime;
-        
+
+        @Override
+        public boolean equals(Object o) {
+                if (this == o) return true;
+                if (o == null || getClass() != o.getClass()) return false;
+                Product product = (Product) o;
+                return id.equals(product.id);
+        }
+
+        @Override
+        public int hashCode() {
+                return Objects.hash(id);
+        }
+
         @Override
         public String toString() {
                 return "Product[" +
