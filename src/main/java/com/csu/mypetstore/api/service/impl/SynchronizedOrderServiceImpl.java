@@ -3,11 +3,13 @@ package com.csu.mypetstore.api.service.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.csu.mypetstore.api.common.CONSTANT;
 import com.csu.mypetstore.api.common.CommonResponse;
+import com.csu.mypetstore.api.common.ResponseCode;
 import com.csu.mypetstore.api.domain.*;
 import com.csu.mypetstore.api.domain.structMapper.AddressStructMapper;
 import com.csu.mypetstore.api.domain.structMapper.OrderStructMapper;
 import com.csu.mypetstore.api.domain.vo.AddressVO;
 import com.csu.mypetstore.api.domain.vo.OrderItemVO;
+import com.csu.mypetstore.api.domain.vo.OrderListVO;
 import com.csu.mypetstore.api.domain.vo.OrderVO;
 import com.csu.mypetstore.api.exception.APIException;
 import com.csu.mypetstore.api.exception.InsertException;
@@ -159,5 +161,57 @@ public class SynchronizedOrderServiceImpl implements OrderService {
 
     private long generateOrderNo(){
         return System.currentTimeMillis() + new Random().nextInt(1000);
+    }
+
+
+    @Override
+    public CommonResponse<OrderVO> deleteOrder(Integer userId, Long orderNo) {
+        Order order = orderMapper.selectOne(Wrappers.<Order>query().eq("uid", userId).eq("order_no", orderNo));
+        List<OrderItem> orderItemList = orderItemMapper.selectList(Wrappers.<OrderItem>query().eq("uid", userId).eq("order_no", orderNo));
+        if (order == null || CollectionUtils.isEmpty(orderItemList)) return CommonResponse.createResponseForError("未查询到对应订单");
+
+        if (order.getStatus() >= CONSTANT.OrderStatus.PAID.getCode())  // 只有未付款的订单能够被取消
+            return CommonResponse.createResponseForError(ResponseCode.PAID_ORDER.getDescription(), ResponseCode.PAID_ORDER.getCode());
+
+        order.setStatus(CONSTANT.OrderStatus.CANCEL.getCode());
+        long row = orderMapper.updateById(order);
+        if (row != 1) return CommonResponse.createResponseForError("修改订单失败");
+
+        OrderVO orderVO = order2VO(order, orderItemList);
+        return CommonResponse.createResponseForSuccess(orderVO);
+    }
+
+    @Override
+    public CommonResponse<OrderVO> getOrderById(Integer userId, Long orderNo) {
+        Order order = orderMapper.selectOne(Wrappers.<Order>query().eq("uid", userId).eq("order_no", orderNo));
+        List<OrderItem> orderItemList = orderItemMapper.selectList(Wrappers.<OrderItem>query().eq("uid", userId).eq("order_no", orderNo));
+        if (order == null || CollectionUtils.isEmpty(orderItemList)) return CommonResponse.createResponseForError("未查询到对应订单");
+
+        OrderVO orderVO = order2VO(order, orderItemList);
+        return CommonResponse.createResponseForSuccess(orderVO);
+
+    }
+
+    @Override
+    public CommonResponse<List<OrderListVO>> getOrderList(Integer userId) {
+        List<Order> orderList = orderMapper.selectList(Wrappers.<Order>query().eq("uid", userId));
+        if (CollectionUtils.isEmpty(orderList)) return CommonResponse.createResponseForError("未查询到对应订单");
+
+        List<OrderListVO> orderListVOList = Lists.newArrayListWithCapacity(orderList.size());
+        for (Order order: orderList) {
+            List<OrderItem> orderItemList = orderItemMapper.selectList(Wrappers.<OrderItem>query().eq("order_no", order.getOrderNo()));
+            List<String> orderItemNameList = Lists.newArrayListWithCapacity(orderItemList.size());
+            orderItemList.forEach(orderItem -> orderItemNameList.add(orderItem.getProductName()));
+
+            AddressVO addressVO = AddressStructMapper.INSTANCE.address2VO(addressMapper.selectById(order.getAddressId()));
+            OrderListVO orderListVO = OrderStructMapper.INSTANCE.order2ListVO(order);
+
+            orderListVO = orderListVO
+                    .withProductNameList(orderItemNameList)
+                    .withAddressVO(addressVO);
+            orderListVOList.add(orderListVO);
+        }
+
+        return CommonResponse.createResponseForSuccess(orderListVOList);
     }
 }

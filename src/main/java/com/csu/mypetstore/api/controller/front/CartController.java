@@ -62,7 +62,7 @@ public class CartController {
     }
 
     @PatchMapping("api/cart")
-    public CommonResponse<CartVO> selectAllCart(@RequestBody Map<String,Boolean> params, HttpSession session) {
+    public CommonResponse<CartVO> selectAllCart(@RequestBody Map<String, Boolean> params, HttpSession session) {
         UserInfoVO loginUser = (UserInfoVO) session.getAttribute(CONSTANT.LOGIN_USER);
         if (loginUser == null)
             return CommonResponse.createResponseForError(ResponseCode.NEED_LOGIN.getDescription(), ResponseCode.NEED_LOGIN.getCode());

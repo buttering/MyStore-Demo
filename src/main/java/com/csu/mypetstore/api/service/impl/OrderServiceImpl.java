@@ -7,10 +7,9 @@ import com.csu.mypetstore.api.domain.CartItem;
 import com.csu.mypetstore.api.domain.Order;
 import com.csu.mypetstore.api.domain.OrderItem;
 import com.csu.mypetstore.api.domain.Product;
-import com.csu.mypetstore.api.domain.structMapper.CartItemStructMapper;
 import com.csu.mypetstore.api.domain.structMapper.OrderStructMapper;
-import com.csu.mypetstore.api.domain.structMapper.ProductStructMapper;
 import com.csu.mypetstore.api.domain.vo.OrderItemVO;
+import com.csu.mypetstore.api.domain.vo.OrderListVO;
 import com.csu.mypetstore.api.domain.vo.OrderVO;
 import com.csu.mypetstore.api.exception.InsertException;
 import com.csu.mypetstore.api.persistence.CartItemMapper;
@@ -20,11 +19,8 @@ import com.csu.mypetstore.api.persistence.ProductMapper;
 import com.csu.mypetstore.api.service.OrderService;
 import com.csu.mypetstore.api.util.BigDecimalUtils;
 import com.google.common.collect.Lists;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.beans.Transient;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -239,4 +235,18 @@ public class OrderServiceImpl implements OrderService {
         return orderVO;
     }
 
+    @Override
+    public CommonResponse<OrderVO> deleteOrder(Integer userId, Long order_no) {
+        return null;
+    }
+
+    @Override
+    public CommonResponse<OrderVO> getOrderById(Integer userId, Long orderNo) {
+        return null;
+    }
+
+    @Override
+    public CommonResponse<List<OrderListVO>> getOrderList(Integer userId) {
+        return null;
+    }
 }

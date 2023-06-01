@@ -5,6 +5,7 @@ import com.csu.mypetstore.api.domain.Order;
 import com.csu.mypetstore.api.domain.OrderItem;
 import com.csu.mypetstore.api.domain.Product;
 import com.csu.mypetstore.api.domain.vo.OrderItemVO;
+import com.csu.mypetstore.api.domain.vo.OrderListVO;
 import com.csu.mypetstore.api.domain.vo.OrderVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -34,4 +35,6 @@ public interface OrderStructMapper {
     @Mapping(target = "createTime", ignore = true)
     @Mapping(target = "updateTime", ignore = true)
     OrderItem cartItemAndProduct2OrderItem(CartItem cartItem, Product product);
+
+    OrderListVO order2ListVO(Order order);
 }

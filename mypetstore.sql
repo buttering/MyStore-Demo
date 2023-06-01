@@ -11,7 +11,7 @@
  Target Server Version : 50568 (5.5.68-MariaDB)
  File Encoding         : 65001
 
- Date: 16/05/2023 17:38:53
+ Date: 29/05/2023 17:13:04
 */
 
 SET NAMES utf8mb4;
@@ -38,18 +38,19 @@ CREATE TABLE `address`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
 
 -- ----------------------------
--- Table structure for cart
+-- Table structure for cartitem
 -- ----------------------------
-DROP TABLE IF EXISTS `cart`;
-CREATE TABLE `cart`  (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `cartitem`;
+CREATE TABLE `cartitem`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
+  `selected` bit(1) NOT NULL,
   `create_time` datetime NOT NULL,
   `update_time` datetime NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for category
@@ -60,7 +61,7 @@ CREATE TABLE `category`  (
   `parent_id` int(11) NULL DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `status` int(1) NULL DEFAULT NULL,
-  `sort_order` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
+  `sort_order` int(11) NULL DEFAULT NULL,
   `create_time` datetime NOT NULL,
   `update_time` datetime NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
@@ -71,7 +72,7 @@ CREATE TABLE `category`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `order`;
 CREATE TABLE `order`  (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `order_no` bigint(20) NOT NULL,
   `uid` int(11) NOT NULL,
   `address_id` int(11) NOT NULL,
@@ -86,26 +87,26 @@ CREATE TABLE `order`  (
   `create_time` datetime NOT NULL,
   `update_time` datetime NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 49 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for orderitem
 -- ----------------------------
 DROP TABLE IF EXISTS `orderitem`;
 CREATE TABLE `orderitem`  (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
   `order_no` bigint(20) NOT NULL,
   `product_id` int(11) NOT NULL,
   `product_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `product_image` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
+  `product_subtitle` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
   `current_price` decimal(10, 0) NOT NULL,
   `quantity` int(11) NOT NULL,
   `total_price` decimal(10, 0) NOT NULL,
   `create_time` datetime NOT NULL,
   `update_time` datetime NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 53 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for payinfo
@@ -170,6 +171,6 @@ CREATE TABLE `user`  (
   `create_time` datetime NOT NULL,
   `update_time` datetime NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
 
 SET FOREIGN_KEY_CHECKS = 1;
