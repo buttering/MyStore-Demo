@@ -168,7 +168,7 @@ public class SynchronizedOrderServiceImpl implements OrderService {
     public CommonResponse<OrderVO> deleteOrder(Integer userId, Long orderNo) {
         Order order = orderMapper.selectOne(Wrappers.<Order>query().eq("uid", userId).eq("order_no", orderNo));
         List<OrderItem> orderItemList = orderItemMapper.selectList(Wrappers.<OrderItem>query().eq("uid", userId).eq("order_no", orderNo));
-        if (order == null || CollectionUtils.isEmpty(orderItemList)) return CommonResponse.createResponseForError("未查询到对应订单");
+        if (order == null || CollectionUtils.isEmpty(orderItemList)) return CommonResponse.createResponseForError(ResponseCode.ORDER_NOT_EXIST.getDescription(), ResponseCode.ORDER_NOT_EXIST.getCode());
 
         if (order.getStatus() >= CONSTANT.OrderStatus.PAID.getCode())  // 只有未付款的订单能够被取消
             return CommonResponse.createResponseForError(ResponseCode.PAID_ORDER.getDescription(), ResponseCode.PAID_ORDER.getCode());
@@ -185,7 +185,7 @@ public class SynchronizedOrderServiceImpl implements OrderService {
     public CommonResponse<OrderVO> getOrderById(Integer userId, Long orderNo) {
         Order order = orderMapper.selectOne(Wrappers.<Order>query().eq("uid", userId).eq("order_no", orderNo));
         List<OrderItem> orderItemList = orderItemMapper.selectList(Wrappers.<OrderItem>query().eq("uid", userId).eq("order_no", orderNo));
-        if (order == null || CollectionUtils.isEmpty(orderItemList)) return CommonResponse.createResponseForError("未查询到对应订单");
+        if (order == null || CollectionUtils.isEmpty(orderItemList)) return CommonResponse.createResponseForError(ResponseCode.ORDER_NOT_EXIST.getDescription(), ResponseCode.ORDER_NOT_EXIST.getCode());
 
         OrderVO orderVO = order2VO(order, orderItemList);
         return CommonResponse.createResponseForSuccess(orderVO);
@@ -195,7 +195,7 @@ public class SynchronizedOrderServiceImpl implements OrderService {
     @Override
     public CommonResponse<List<OrderListVO>> getOrderList(Integer userId) {
         List<Order> orderList = orderMapper.selectList(Wrappers.<Order>query().eq("uid", userId));
-        if (CollectionUtils.isEmpty(orderList)) return CommonResponse.createResponseForError("未查询到对应订单");
+        if (CollectionUtils.isEmpty(orderList)) return CommonResponse.createResponseForError(ResponseCode.ORDER_NOT_EXIST.getDescription(), ResponseCode.ORDER_NOT_EXIST.getCode());
 
         List<OrderListVO> orderListVOList = Lists.newArrayListWithCapacity(orderList.size());
         for (Order order: orderList) {

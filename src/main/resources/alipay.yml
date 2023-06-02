@@ -1,7 +1,7 @@
 Alipay-easySDK:
-  appId: 2021000122694561
-  gatewayHost: openapi.alipaydev.com  # 支付宝沙箱应用网关
+  appId: 9021000122680477
+  gatewayHost: openapi-sandbox.dl.alipaydev.com  # 支付宝沙箱应用网关
   merchantPrivateKeyPath: E:\project\myPetstore\src\main\resources\static\AlipayRSAPrivateKey.txt  # 应用RSA签名私钥文件路径地址
-  alipayPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlo6o5uLEr6LtEAo0BVe6N9ED/bODHF3IUVmzaYUauf8E8qrE2Ng7bXp/CeiFcOeZVgHu2wBR3qS6CiAhnd5+fQTyJbM+92X+IUX6UlN38mdCGAOqhzgmF/82kckMIBzsZ5ccmAJ4kHillUqKJqVeKIl80AjMVI+1sgDqOiyGzBAhelEu+bo9LGB+rYVM5BsoDow5kG43Kwe43xqWzBk8Gi1XgMmPnpMpTo52biQirtJeNLRUSBIEiIBLjmwPTbmtglOujnh/IFIiG0gEGdAfNvMBzPh3mfvTTATBEVX6dO2f3/5tnOxo/Op753LiYiKEP5OYBe9Bb9abpi3Rc6K82QIDAQAB # 支付宝公钥
+  alipayPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAln5w36FghruMPhwbjOYZT7CxynhcIQy5QsBvA30WnEWKDJSnafQkwAxfC31SFJ3xivHfZK3SI/M8U9UpyeWAdU8yOwOtRC3sDf2rI27ZeN5y+w7wCNom3eSTDVk9597ObU5maHRqBYTbmwFm2xIeKjbN6Lj6aKZE0dqLGrGJVjawTthe78IEJyeoH2t7ERzG0QTppaorw6FieVFhG3E8JF0DoqG7GCLH+IZS6cgbIVFin778oc6fPdJre+jX5bXtLwLoAzkJyM8/wEcgna8DyOcdAn0Ax9PwR1P9dMiWG6wN+TAQRdyRaHgyC7fIhmMhK/4JIgv8rPxw952jN+JBrQIDAQAB # 支付宝公钥
   notifyUrl:  # 可设置异步通知接收服务地址（可选）（该地址需要外网能够访问）
-  encryptKey: 3DhjuomuYyky32zECXPLrA==  # 消息加密AES对称密钥
+  encryptKey: ml3Gv7GCE2IaSpbKMTjgbA==  # 消息加密AES对称密钥

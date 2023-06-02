@@ -48,6 +48,10 @@ public final class CONSTANT {
         int SUB_IMAGE = 2;
     }
 
+    public interface PaymentType {
+        int ALIPAY_FACE2FACE = 1;
+    }
+
     public static final Set<String> ORDER_BY_FIELD_LIST = new HashSet<>();
     static {
         ORDER_BY_FIELD_LIST.add("category_id");
