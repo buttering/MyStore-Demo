@@ -211,7 +211,7 @@ POST
 ### URL
 
 ```
-/api/user/{id}
+/api/user
 ```
 
 ### 请求方法
@@ -219,12 +219,6 @@ POST
 ```
 GET
 ```
-
-### url参数
-
-| 参数 | 类型  | 描述   | 可空 | 类别            |
-|----|-----|------|----|---------------|
-| id | Int | 用户id | 否  | path variable |
 
 ### 返回字段
 
@@ -235,6 +229,8 @@ GET
 | data    | Object | 用户信息 |
 
 ### 应答示例
+
+success：
 
 ```json
 {
@@ -247,6 +243,15 @@ GET
         "phone": 1869544651,
         "role": 1
     }
+}
+```
+
+error：
+
+```json
+{
+    "code": 1,
+    "message": "未登录用户不能查看用户信息"
 }
 ```
 
@@ -940,15 +945,6 @@ GET
 | code    | Int    | 状态码             |
 | message | String | 状态信息           |
 | data    | Object | 获取图片必要的信息 |
-data内容：
-| 参数         | 类型   | 描述                       |
-| ------------ | ------ | -------------------------- |
-| tmpSecretId  | String | 临时密钥SecretId           |
-| tmpSecretKey | String | 临时密钥SecretKey          |
-| sessionToken | String | 临时密钥sessionToken       |
-| startTime    |        | 暂时禁用，看客户端是否需要 |
-| expiredTime  |        | 暂时禁用                   |
-
 ### 应答示例
 
 ```json
@@ -962,6 +958,16 @@ data内容：
     }
 }
 ```
+
+data内容：
+
+| 参数         | 类型   | 描述                       |
+| ------------ | ------ | -------------------------- |
+| tmpSecretId  | String | 临时密钥SecretId           |
+| tmpSecretKey | String | 临时密钥SecretKey          |
+| sessionToken | String | 临时密钥sessionToken       |
+| startTime    |        | 暂时禁用，看客户端是否需要 |
+| expiredTime  |        | 暂时禁用                   |
 
 ## 2. 上传商品图片
 
@@ -1572,8 +1578,6 @@ error:
     "message": "商品(GAO ANQI)库存不足"
 }
 ```
-
-
 
 ## 2. 从购物车生成订单
 

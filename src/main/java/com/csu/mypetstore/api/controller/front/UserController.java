@@ -87,11 +87,12 @@ public class UserController {
         return result;
     }
 
-    @GetMapping("api/user/{id}")
-    public CommonResponse<UserInfoVO> getUserInfo(@PathVariable Integer id, HttpSession session) {
+    @GetMapping("api/user")
+    public CommonResponse<UserInfoVO> getUserInfo(HttpSession session) {
         UserInfoVO user = (UserInfoVO) session.getAttribute(CONSTANT.LOGIN_USER);
         if (user == null)
-            return CommonResponse.createResponseForError(ResponseCode.NEED_LOGIN.getDescription(), ResponseCode.NEED_LOGIN.getCode());
+//            return CommonResponse.createResponseForError(ResponseCode.NEED_LOGIN.getDescription(), ResponseCode.NEED_LOGIN.getCode());  // 前端会自动跳转
+            return CommonResponse.createResponseForError("未登录用户不能查看用户信息");
         return CommonResponse.createResponseForSuccess(user);
     }
 
