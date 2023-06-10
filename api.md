@@ -787,7 +787,7 @@ id 和 keyword 至少有一个非空。
                 "subtitle": "Miss.",
                 "price": 910,
                 "status": 1,
-                "imageList": []
+                "imageList": [{}]
             },
             {
                 "id": 10,
@@ -796,7 +796,7 @@ id 和 keyword 至少有一个非空。
                 "subtitle": "Mrs.",
                 "price": 74,
                 "status": 1,
-                "imageList": []
+                "imageList": [{}]
             }
         ],
         "total": 10,
@@ -886,7 +886,8 @@ GET
         			"tmpSecretId": "",
                     "tmpSecretKey": "",
                     "sessionToken": ""
-    			}
+    			},
+                "url": ""
             }
         ]
     }
@@ -895,20 +896,21 @@ GET
 
 imageList字段信息见下表
 
-| 参数       | 类型    | 描述                                                         |
-| ---------- | ------- | ------------------------------------------------------------ |
-| image      | Object  | 产品的图像                                                   |
-| token      | Object  | 图像对应的临时密钥，用于向对象存储服务获取图片，字段与获取图片临时密钥接口一致。可为null，表示服务端获取token失败，为空时可使用图片密钥接口再次尝试获取。 |
-| id         | String  | 图像编号                                                     |
-| pid        | Integer | 对应产品编号                                                 |
-| type       | Integer | 图像类型,main image:1, sub image: 2                          |
-| alt        | String  | 图像文字描述                                                 |
-| createTime | String  | 图像上传时间                                                 |
+| 参数          | 类型    | 描述                                                         |
+| ------------- | ------- | ------------------------------------------------------------ |
+| image         | Object  | 产品的图像                                                   |
+| token(已废除) | Object  | 图像对应的临时密钥，用于向对象存储服务获取图片，字段与获取图片临时密钥接口一致。可为null，表示服务端获取token失败，为空时可使用图片密钥接口再次尝试获取。 |
+| url           | String  | 图像url                                                      |
+| id            | String  | 图像编号                                                     |
+| pid           | Integer | 对应产品编号                                                 |
+| type          | Integer | 图像类型,main image:1, sub image: 2                          |
+| alt           | String  | 图像文字描述                                                 |
+| createTime    | String  | 图像上传时间                                                 |
 
 图片相关接口
 ==========================
 
-## 1. 获取图片临时密钥
+## 1. 获取图片临时密钥(已废除)
 
 ### 接口功能
 
@@ -965,7 +967,49 @@ data内容：
 | startTime    |        | 暂时禁用，看客户端是否需要 |
 | expiredTime  |        | 暂时禁用                   |
 
-## 2. 上传商品图片
+## 2. 获取图片预签名链接
+
+### 接口功能
+
+获取指定图片的链接，用于向图片服务器请求服务。
+
+### URL
+
+```
+/api/image/{id}
+```
+
+### 请求方法
+
+```
+GET 
+```
+
+### url参数
+
+| 参数 | 类型   | 描述     | 可空 | 类别          |
+| ---- | ------ | -------- | ---- | ------------- |
+| id   | String | 图像编号 | 否   | path variable |
+
+### 返回字段
+
+| 参数    | 类型   | 描述     |
+| ------- | ------ | -------- |
+| code    | Int    | 状态码   |
+| message | String | 状态信息 |
+| data    | String | 图片url  |
+
+### 应答示例
+
+```json
+{
+    "code": 0,
+    "data": "https://mystore-1312558924.cos.ap-guangzhou.myqcloud.com/2ca01b95de54ba11eb44becbc6c4cd69?q-sign-algorithm=sha1&q-ak=AKID30lNuHcprJdqsmZBal6Ik04C9LOF1ayE&q-sign-time=1686398177%3B1686830177&q-key-time=1686398177%3B1686830177&q-header-list=host&q-url-param-list=&q-signature=f17ca17c756ec299234a22944fbf1f9f0980120c",
+    "message": "SUCCESS"
+}
+```
+
+## 3. 上传商品图片
 
 商品类别相关接口
 ==========================
@@ -1953,57 +1997,7 @@ error：
 模板
 ===========================
 
-### 接口功能
-
-
-
-### URL
-
-```
-
-```
-
-### 请求方法
-
-```
-
-```
-
-### url参数
-
-| 参数 | 类型 | 描述 | 可空 | 类别                             |
-|----|----|----|----|--------------------------------|
-|    |    |    |    | path variable \| request param |
-
-### 请求体参数
-
-| 参数 | 类型 | 描述 | 可空 |
-|----|----|----|----|
-|    |    |    |    |
-
-### 返回字段
-
-| 参数      | 类型     | 描述   |
-|---------|--------|------|
-| code    | Int    | 状态码  |
-| message | String | 状态信息 |
-
-### 请求体示例
-
-```json
-
-```
-
-### 应答示例
-
-```json
-{
-    "code": 0,
-    "message": "SUCCESS"
-}
-```
-
-
+c'ccc
 
 
 

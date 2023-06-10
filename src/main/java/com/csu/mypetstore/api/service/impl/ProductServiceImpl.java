@@ -69,12 +69,12 @@ public class ProductServiceImpl implements ProductService {
             String imageId = productImage.getId();
             if (onlyMainImage && productImage.getType() != CONSTANT.ProductImageType.MAIN_IMAGE)
                 break;  // 若只要求主图
-            TencentCOSVO token = null;
+            String url = "";
             if (withToken)
-                token = cosService.generatePolicy(imageId, CONSTANT.IMAGE_PERMISSION.GET_OBJECT).getData();
+                url = cosService.generateURL(imageId, CONSTANT.IMAGE_PERMISSION.GET_OBJECT).getData();
             Map<String, Object> map = new HashMap<>();
             map.put("image", productImage);
-            map.put("token", token);
+            map.put("url", url);
             mapList.add(map);
         }
         return mapList;

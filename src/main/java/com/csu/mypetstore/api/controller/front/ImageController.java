@@ -19,7 +19,7 @@ public class ImageController {
     }
 
     @GetMapping("api/image/{id}")
-    CommonResponse<?> getImageToken(@PathVariable @NotNull String id) {
-        return cosService.generatePolicy(id, CONSTANT.IMAGE_PERMISSION.GET_OBJECT);
+    CommonResponse<String> getImageToken(@PathVariable @NotNull String id) {
+        return cosService.generateURL(id, CONSTANT.IMAGE_PERMISSION.GET_OBJECT);
     }
 }

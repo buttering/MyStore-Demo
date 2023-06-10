@@ -7,6 +7,5 @@ public record TencentCOSVO(
     String tmpSecretId,
     String tmpSecretKey,
     String sessionToken,
-    String presignedUrl,
     String serverURL
 ) {}

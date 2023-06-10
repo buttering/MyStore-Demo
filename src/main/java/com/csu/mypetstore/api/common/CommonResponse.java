@@ -27,9 +27,6 @@ public class CommonResponse <T> {
         return new CommonResponse<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getDescription(), null);
     }
 
-    public static <A> CommonResponse<A> createResponseForSuccess(String message){
-        return new CommonResponse<>(ResponseCode.SUCCESS.getCode(), message, null);
-    }
 
     public static <A> CommonResponse<A> createResponseForSuccess(A data){
         return new CommonResponse<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getDescription(), data);
