@@ -7,7 +7,6 @@ import com.csu.mypetstore.api.domain.ImageToken;
 import com.csu.mypetstore.api.domain.vo.TencentCOSVO;
 import com.csu.mypetstore.api.service.COSService;
 import com.github.benmanes.caffeine.cache.Cache;
-import com.google.common.collect.Lists;
 import com.tencent.cloud.CosStsClient;
 import com.tencent.cloud.Credentials;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.TreeMap;
 
 @Slf4j
@@ -33,14 +31,19 @@ public class TencentCOSServiceImpl implements COSService {
     private String BUCKET;
     @Value("${tencent-cloud.cos.region}")
     private String REGION;
+    @Value("${tencent-cloud.cos.serverURL}")
+    private String serverURL;
 
     Cache<String, ImageToken> imageTokenCache;
+
     TencentCOSServiceImpl(Cache<String, ImageToken> imageTokenCache) {
         this.imageTokenCache = imageTokenCache;
     }
 
     @Override
+    // 生成临时密钥
     public CommonResponse<TencentCOSVO> generatePolicy(String imageId, CONSTANT.IMAGE_PERMISSION permission) {
+
         if (StringUtils.isBlank(imageId))
             return CommonResponse.createResponseForError(ResponseCode.ARGUMENT_ILLEGAL.getDescription(), ResponseCode.SUCCESS.getCode());
 
@@ -66,13 +69,14 @@ public class TencentCOSServiceImpl implements COSService {
             config.put("durationSeconds", DURATION_SECONDS);
             config.put("bucket", BUCKET);
             config.put("region", REGION);
-            config.put("allowPrefixes", new String[] {imageId});  // TODO: 一次请求，根据类别获取一类图片的token，置于redis中，这些图片共用一个token
-            config.put("allowActions", new String[] {permission.getPermission()});// TODO: 最小权限
+            config.put("allowPrefixes", new String[]{imageId});  // TODO: 一次请求，根据类别获取一类图片的token，置于redis中，这些图片共用一个token
+            config.put("allowActions", new String[]{permission.getPermission()});// TODO: 最小权限
+
 
             Credentials credentials = CosStsClient.getCredential(config).credentials;
-            tencentCOSVO = new TencentCOSVO(credentials.tmpSecretId, credentials.tmpSecretKey, credentials.sessionToken);
+            tencentCOSVO = new TencentCOSVO(credentials.tmpSecretId, credentials.tmpSecretKey, null,credentials.sessionToken, serverURL);
         } catch (Exception e) {
-            log.info("服务端生成AliOSS的policy失败.",e);
+            log.info("服务端生成AliOSS的policy失败.", e);
             return CommonResponse.createResponseForError();
         }
 
@@ -82,7 +86,30 @@ public class TencentCOSServiceImpl implements COSService {
         return CommonResponse.createResponseForSuccess(tencentCOSVO);
     }
 
-//    @Override
+    @Override
+    // 生成预签名url
+    public CommonResponse<TencentCOSVO> generateURL(String imageId, CONSTANT.IMAGE_PERMISSION permission) {
+//        if (StringUtils.isBlank(imageId))
+//            return CommonResponse.createResponseForError(ResponseCode.ARGUMENT_ILLEGAL.getDescription(), ResponseCode.SUCCESS.getCode());
+//
+//        String keyString = imageId + permission;
+//        TencentCOSVO tencentCOSVO;
+//
+//        // 检查缓存和可用时间
+//        ImageToken imageToken = imageTokenCache.getIfPresent(keyString);
+//        if (imageToken != null) {
+//            long minutes = Duration.between(imageToken.createTime(), LocalDateTime.now()).toMinutes();
+//            if (minutes <= DURATION_SECONDS / 60 - 20) {  // 缓存中存在有效时间多于20分钟的token
+//                tencentCOSVO = imageToken.token();
+//                log.info("取出token缓存: {}", imageToken);
+//                return CommonResponse.createResponseForSuccess(tencentCOSVO);
+//            }
+//        }
+
+        return null;
+    }
+
+    //    @Override
 //    public CommonResponse<List<TencentCOSVO>> generatePolicy(List<String> imageIdList, CONSTANT.IMAGE_PERMISSION permission) {
 //        List<TencentCOSVO> tokenList = Lists.newArrayList();
 //        List<String> outOfCache = Lists.newArrayList();

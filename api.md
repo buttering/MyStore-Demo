@@ -61,7 +61,7 @@
 POST
 ```
 
-### 请求体参数
+### 请求体参数 
 
 | 参数       | 类型     | 描述   | 可控 |
 |----------|--------|------|----|
@@ -110,7 +110,7 @@ POST
 ### URL
 
 ```
-/api/session/{id}
+/api/session
 ```
 
 ### 请求方法
@@ -118,12 +118,6 @@ POST
 ```
 DELETE
 ```
-
-### url参数
-
-| 参数 | 类型  | 描述   | 可空 | 类别            |
-|----|-----|------|----|---------------|
-| id | Int | 用户id | 否  | path variable |
 
 ### 返回字段
 
@@ -838,7 +832,7 @@ data字段信息见下表
 ### URL
 
 ```
-/api/products/{id}
+api/products/{id}
 ```
 
 ### 请求方法
@@ -952,6 +946,7 @@ GET
     "code": 0,
     "message": "SUCCESS",
     "data": {
+        "imgServer": "mystore-1312558924.cos.ap-guangzhou.myqcloud.com",
         "tmpSecretId": "AKIDLphLyrJ0E-P_wbT7LwdnvSjk_7WvX67X0kQ2PPV7wuo2MQMqKyfHkrK_Yap81Fqx",
         "tmpSecretKey": "Xb72buUNay4/4xE994m7CNSuJYqsmPhGAJ5oX4m7wwI=",
         "sessionToken": "4TLfetbjxgoBG3uWKgeei4S3FhBOZ20afc5e600e39700b44525a2bde14ecdce48p5zfItn5K2eiQIyk7m8KvVjfT3HGur-xFFgF_u3cRw4oLY_RuajilL9R9i2-gjuPeeEy_dZD42OcNseJl51ivRs8vM3MGL4b_ZjlU2qdzG1uW0md5pCqcdfVJ0ILyLCwI10d0r74W0zULIT-i0iyD27a0d-nQGFhcqwNT4wnllKV1L8yVUSLlTWWxc_9iu76g5wOvygNfLUdAiZWkDSEMwUQmNNhR2tSBOecsVTHdJk5rjBlpZbRXKHZVeiuwhZNWmO8YuOwyw7NgrbdjfTdM9rHwDZELy7OX57VB_2p0KEm02Oq7r3MKBXONulrd5x6sNOrxkeFULzodvTdAfCL29JI4mbduLbiB2yKgAfVT0cnjp5Za9prZeZ0zbkwxQgvMh2u3zxNccHwiH0GXEkg7uzLvsnBr9vyJUfjQJIo0Q"
@@ -963,6 +958,7 @@ data内容：
 
 | 参数         | 类型   | 描述                       |
 | ------------ | ------ | -------------------------- |
+| imgServer    | String | 图片服务器地址             |
 | tmpSecretId  | String | 临时密钥SecretId           |
 | tmpSecretKey | String | 临时密钥SecretKey          |
 | sessionToken | String | 临时密钥sessionToken       |

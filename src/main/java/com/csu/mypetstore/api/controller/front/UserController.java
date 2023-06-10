@@ -38,8 +38,8 @@ public class UserController {
         return result;
     }
 
-    @DeleteMapping("api/session/{id}")
-    public CommonResponse<String> logout(@PathVariable Integer id, HttpSession session) {  // 设计冗余属性id，之后的重构可能用到
+    @DeleteMapping("api/session")
+    public CommonResponse<String> logout(HttpSession session) {  // 设计冗余属性id，之后的重构可能用到
         session.removeAttribute(CONSTANT.LOGIN_USER);
         return CommonResponse.createResponseForSuccess("退出登录成功");
     }

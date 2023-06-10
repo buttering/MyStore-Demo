@@ -198,7 +198,7 @@ class MyPetstoreApplicationTests {
 
     @Test
     void testCache() {
-        ImageToken imageToken = new ImageToken("1", new TencentCOSVO("A", "a", "1"), CONSTANT.IMAGE_PERMISSION.GET_OBJECT, LocalDateTime.now());
+        ImageToken imageToken = new ImageToken("1", new TencentCOSVO("A", "a", "1", "mystore-1312558924"), CONSTANT.IMAGE_PERMISSION.GET_OBJECT, LocalDateTime.now());
         localCache.put("aaa", "aaa");
         localCache.put("aaa", "bbb");
         imageTokenCache.put("aaa", imageToken);

@@ -71,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
                 break;  // 若只要求主图
             TencentCOSVO token = null;
             if (withToken)
-                token = (TencentCOSVO) cosService.generatePolicy(imageId, CONSTANT.IMAGE_PERMISSION.GET_OBJECT).getData();
+                token = cosService.generatePolicy(imageId, CONSTANT.IMAGE_PERMISSION.GET_OBJECT).getData();
             Map<String, Object> map = new HashMap<>();
             map.put("image", productImage);
             map.put("token", token);
